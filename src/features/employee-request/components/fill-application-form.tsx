@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { Camera, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -46,8 +46,12 @@ const formSchema = z.object({
 })
 
 export default function FillApplicationForm() {
+  const [capturedImage, setCapturedImage] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const toast = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,6 +75,38 @@ export default function FillApplicationForm() {
       title: 'Application Submitted',
       description: 'Your application has been successfully submitted.',
     })
+  }
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        setIsCameraOpen(true)
+      }
+    } catch (err) {
+      console.error('Error accessing the camera:', err)
+      toast({
+        title: 'Camera Error',
+        description:
+          'Unable to access the camera. Please check your permissions.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const captureImage = () => {
+    if (videoRef.current && canvasRef.current) {
+      const context = canvasRef.current.getContext('2d')
+      if (context) {
+        context.drawImage(videoRef.current, 0, 0, 320, 240)
+        const imageDataUrl = canvasRef.current.toDataURL('image/jpeg')
+        setCapturedImage(imageDataUrl)
+        setIsCameraOpen(false)
+        // Stop all video streams
+        const stream = videoRef.current.srcObject as MediaStream
+        stream.getTracks().forEach((track) => track.stop())
+      }
+    }
   }
 
   return (
@@ -189,17 +225,53 @@ export default function FillApplicationForm() {
             <FormItem>
               <FormLabel>Take Photo (Optional)</FormLabel>
               <FormControl>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  onChange={(e) =>
-                    setFile(e.target.files ? e.target.files[0] : null)
-                  }
-                  className='w-full'
-                />
+                {isCameraOpen ? (
+                  <div className='space-y-2'>
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      className='w-full'
+                    />
+                    <Button
+                      type='button'
+                      onClick={captureImage}
+                      className='w-full'
+                    >
+                      <Camera className='mr-2 h-4 w-4' />
+                      Take Photo
+                    </Button>
+                  </div>
+                ) : capturedImage ? (
+                  <div className='space-y-2'>
+                    <img
+                      src={capturedImage || '/placeholder.svg'}
+                      alt='Captured'
+                      className='w-full'
+                    />
+                    <Button
+                      type='button'
+                      onClick={() => setCapturedImage(null)}
+                      variant='outline'
+                      className='w-full'
+                    >
+                      Retake Photo
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type='button'
+                    onClick={openCamera}
+                    variant='outline'
+                    className='w-full'
+                  >
+                    <Camera className='mr-2 h-4 w-4' />
+                    Open Camera
+                  </Button>
+                )}
               </FormControl>
               <FormDescription>
-                You can upload an image (JPEG, JPG, PNG).
+                You can capture an image using your device's camera.
               </FormDescription>
             </FormItem>
             <Button type='submit' className='w-full' disabled={isSubmitting}>
