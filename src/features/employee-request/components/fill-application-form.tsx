@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,6 +48,7 @@ const formSchema = z.object({
 
 export default function FillApplicationForm() {
   const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const toast = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,6 +61,18 @@ export default function FillApplicationForm() {
       request: undefined,
     },
   })
+
+  useEffect(() => {
+    if (!file) {
+      setPreview(null)
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(file)
+    setPreview(objectUrl)
+
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [file])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
@@ -191,18 +204,36 @@ export default function FillApplicationForm() {
               <FormLabel>Take Photo (Optional)</FormLabel>
               <FormControl>
                 <div className='flex flex-col gap-2'>
-                  <div className='flex items-center gap-3'>
-                    <Button
-                      variant='outline'
-                      type='button'
-                      className='w-fit gap-2'
-                      onClick={() =>
-                        document.getElementById('file-upload')?.click()
-                      }
-                    >
-                      <IconUpload className='h-4 w-4' />
-                     
-                    </Button>
+                  <div
+                    className='relative h-32 w-full cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600'
+                    onClick={() =>
+                      document.getElementById('file-upload')?.click()
+                    }
+                  >
+                    {preview ? (
+                      <div className='absolute inset-0 flex items-center justify-center'>
+                        <img
+                          src={preview}
+                          alt='Preview'
+                          className='h-full w-full rounded-lg object-contain p-2'
+                        />
+                      </div>
+                    ) : (
+                      <div className='absolute inset-0 flex flex-col items-center justify-center gap-2'>
+                        <IconUpload className='h-6 w-6 text-gray-500 dark:text-gray-400' />
+                        <div className='flex flex-col items-center gap-1'>
+                          <p className='text-sm text-gray-500 dark:text-gray-400'>
+                            <span className='font-semibold'>
+                              Click to upload
+                            </span>{' '}
+                            or drag and drop
+                          </p>
+                          <p className='text-xs text-gray-500 dark:text-gray-400'>
+                            JPEG, JPG, PNG (MAX. 5MB)
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <Input
                       id='file-upload'
                       type='file'
@@ -220,25 +251,26 @@ export default function FillApplicationForm() {
                         setFile(file || null)
                       }}
                     />
-                    {file && (
-                      <div className='flex items-center gap-2 text-sm'>
-                        <span className='text-muted-foreground'>
-                          {file.name}
-                        </span>
-                        <Button
-                          variant='ghost'
-                          size='icon'
-                          className='h-5 w-5 text-red-500'
-                          onClick={() => setFile(null)}
-                        >
-                          <IconX className='h-4 w-4' />
-                        </Button>
-                      </div>
-                    )}
                   </div>
-                  <FormDescription className='text-xs'>
-                    Supported formats: JPEG, JPG, PNG (Max 5MB)
-                  </FormDescription>
+
+                  {file && (
+                    <div className='flex items-center gap-2 rounded-md border bg-muted/50 p-2 text-sm'>
+                      <span className='flex-1 truncate text-muted-foreground'>
+                        {file.name}
+                      </span>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        className='h-5 w-5 text-red-500 hover:text-red-600'
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setFile(null)
+                        }}
+                      >
+                        <IconX className='h-4 w-4' />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </FormControl>
               <FormMessage />
