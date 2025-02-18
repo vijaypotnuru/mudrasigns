@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Camera, Loader2 } from 'lucide-react'
+import Webcam from 'react-webcam'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -50,8 +51,7 @@ export default function FillApplicationForm() {
   const [file, setFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const webcamRef = useRef<Webcam>(null)
   const toast = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,48 +64,34 @@ export default function FillApplicationForm() {
     },
   })
 
+  useEffect(() => {
+    return () => {
+      // Cleanup any active streams on unmount
+      if (webcamRef.current?.video) {
+        const stream = webcamRef.current.video.srcObject as MediaStream
+        stream.getTracks().forEach((track) => track.stop())
+      }
+    }
+  }, [])
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000))
     setIsSubmitting(false)
 
-    console.log(values, file)
+    console.log("See this ",values, file)
     toast({
       title: 'Application Submitted',
       description: 'Your application has been successfully submitted.',
     })
   }
-  const openCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        setIsCameraOpen(true)
-      }
-    } catch (err) {
-      console.error('Error accessing the camera:', err)
-      toast({
-        title: 'Camera Error',
-        description:
-          'Unable to access the camera. Please check your permissions.',
-        variant: 'destructive',
-      })
-    }
-  }
 
   const captureImage = () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext('2d')
-      if (context) {
-        context.drawImage(videoRef.current, 0, 0, 320, 240)
-        const imageDataUrl = canvasRef.current.toDataURL('image/jpeg')
-        setCapturedImage(imageDataUrl)
-        setIsCameraOpen(false)
-        // Stop all video streams
-        const stream = videoRef.current.srcObject as MediaStream
-        stream.getTracks().forEach((track) => track.stop())
-      }
+    const imageSrc = webcamRef.current?.getScreenshot()
+    if (imageSrc) {
+      setCapturedImage(imageSrc)
+      setIsCameraOpen(false)
     }
   }
 
@@ -227,11 +213,24 @@ export default function FillApplicationForm() {
               <FormControl>
                 {isCameraOpen ? (
                   <div className='space-y-2'>
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      className='w-full'
+                    <Webcam
+                      ref={webcamRef} 
+                      audio={false}
+                      screenshotFormat='image/jpeg'
+                      videoConstraints={{
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                      }}
+                      className='aspect-video w-full rounded-md'
+                      onUserMediaError={() => {
+                        toast({
+                          title: 'Camera Error',
+                          description: 'Failed to access camera',
+                          variant: 'destructive',
+                        })
+                        setIsCameraOpen(false)
+                      }}
                     />
                     <Button
                       type='button'
@@ -239,19 +238,22 @@ export default function FillApplicationForm() {
                       className='w-full'
                     >
                       <Camera className='mr-2 h-4 w-4' />
-                      Take Photo
+                      Capture Photo
                     </Button>
                   </div>
                 ) : capturedImage ? (
                   <div className='space-y-2'>
                     <img
-                      src={capturedImage || '/placeholder.svg'}
+                      src={capturedImage}
                       alt='Captured'
-                      className='w-full'
+                      className='aspect-square w-full rounded-md object-cover'
                     />
                     <Button
                       type='button'
-                      onClick={() => setCapturedImage(null)}
+                      onClick={() => {
+                        setCapturedImage(null)
+                        setIsCameraOpen(true)
+                      }}
                       variant='outline'
                       className='w-full'
                     >
@@ -261,7 +263,7 @@ export default function FillApplicationForm() {
                 ) : (
                   <Button
                     type='button'
-                    onClick={openCamera}
+                    onClick={() => setIsCameraOpen(true)}
                     variant='outline'
                     className='w-full'
                   >
