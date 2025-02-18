@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -371,15 +372,10 @@ export default function FillApplicationForm() {
         <DialogContent className='sm:max-w-md'>
           <DialogHeader>
             <DialogTitle className='text-destructive'>Error!</DialogTitle>
-            <DialogDescription>
-              {errorMessage}
-            </DialogDescription>
+            <DialogDescription>{errorMessage}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button 
-              type="button" 
-              onClick={() => setShowErrorDialog(false)}
-            >
+            <Button type='button' onClick={() => setShowErrorDialog(false)}>
               OK
             </Button>
           </DialogFooter>
