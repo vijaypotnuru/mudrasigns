@@ -56,9 +56,19 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title : "Employee Request",
-          url : "/employee-request",
+          title: 'Employee Request',
+          url: '/employee-request',
           icon: IconChecklist,
+        },
+        {
+          title: 'Customer Requests',
+          url: '/customer-requests',
+          icon: IconChecklist,
+        },
+        {
+          title: 'Requests By Employees',
+          url: '/requests-by-employees',
+          icon: IconBarrierBlock,
         },
         // {
         //   title: 'Tasks',

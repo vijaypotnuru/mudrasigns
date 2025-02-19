@@ -67,7 +67,7 @@ export default function FillApplicationForm() {
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
   const toast = useToast()
-
+  const userId = localStorage.getItem('isEmployee')
   const mutation = useMutation({
     mutationFn: (
       values: z.infer<typeof formSchema> & { file: File | null }
@@ -115,6 +115,7 @@ export default function FillApplicationForm() {
     const payload = {
       ...values,
       file,
+      userId: userId,
     }
     mutation.mutate(payload)
   }
