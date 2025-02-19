@@ -96,7 +96,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'fullName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Full Name' />
+      <DataTableColumnHeader column={column} title='Client Name' />
     ),
     cell: ({ row }) => {
       return (
@@ -291,6 +291,6 @@ export const columns: ColumnDef<Task>[] = [
   // },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} id={row.original.id}/>,
+    cell: ({ row }) => <DataTableRowActions row={row} id={row.original.id} />,
   },
 ]

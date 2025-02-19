@@ -8,12 +8,12 @@ import { AppSidebar } from '@/components/layout/app-sidebar'
 import SkipToMain from '@/components/skip-to-main'
 
 export const Route = createFileRoute('/_authenticated')({
-  beforeLoad: () => {
+  beforeLoad: ({ location }) => {
     const user = JSON.parse(localStorage.getItem('user') || 'null')
     if (!user) {
       throw redirect({
         to: '/sign-in',
-        search: { redirect: router.state.location.href },
+        search: { redirect: location.href },
       })
     }
   },

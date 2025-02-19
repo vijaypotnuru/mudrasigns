@@ -20,6 +20,21 @@ export const getSignBoardRequests = async () => {
     .filter((request) => !request.hasOwnProperty('userId'))
   return requests
 }
+
+
+export const getAllSignBoardRequests = async () => {
+  const querySnapshot = await getDocs(collection(db, 'sign_board_requests'))
+  const requests = querySnapshot.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+  return requests
+}
+
+
+
+
 export const getSignBoardRequestsByEmployee = async () => {
   const querySnapshot = await getDocs(collection(db, 'sign_board_requests'))
   const requests = querySnapshot.docs

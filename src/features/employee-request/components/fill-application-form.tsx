@@ -38,7 +38,7 @@ import {
 
 const formSchema = z.object({
   fullName: z.string().min(2, {
-    message: 'Full name must be at least 2 characters.',
+    message: 'Client name must be at least 2 characters.',
   }),
   phoneNumber: z.string().regex(/^\d{10}$/, {
     message: 'Phone number must be 10 digits.',

@@ -74,6 +74,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         localStorage.setItem('msadmin', 'msadmin')
 
         const userDetails = {
+          userId: 'msadmin',
           email: data.email,
           password: data.password,
           role: 'admin',
@@ -85,6 +86,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         localStorage.setItem('isEmployee', userId)
 
         const userDetails = {
+          userId: userId,
           email: data.email,
           password: data.password,
           role: 'employee',

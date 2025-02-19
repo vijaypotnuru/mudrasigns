@@ -91,7 +91,7 @@ export default function RequestDetailsPage({ requestDetails }: { requestDetails:
                   <FileText className='mr-3 h-5 w-5 text-primary' />
                   <div>
                     <h3 className='font-semibold text-muted-foreground'>
-                      Full Name
+                      Client Name
                     </h3>
                     <p>{requestDetails.fullName}</p>
                   </div>
