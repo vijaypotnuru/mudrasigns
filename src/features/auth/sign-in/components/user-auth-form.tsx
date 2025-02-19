@@ -72,10 +72,24 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         data.password === 'mango@123'
       ) {
         localStorage.setItem('msadmin', 'msadmin')
+
+        const userDetails = {
+          email: data.email,
+          password: data.password,
+          role: 'admin',
+        }
+        localStorage.setItem('user', JSON.stringify(userDetails))
         navigate({ to: '/' as '/' })
       } else if (validUser) {
         const userId = `msemp${marketingUsernames.indexOf(data.email) + 1}`
         localStorage.setItem('isEmployee', userId)
+
+        const userDetails = {
+          email: data.email,
+          password: data.password,
+          role: 'employee',
+        }
+        localStorage.setItem('user', JSON.stringify(userDetails))
         navigate({ to: '/employee-request' as '/' })
       } else {
         setLoginError('Invalid email or password')

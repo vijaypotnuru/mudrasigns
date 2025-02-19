@@ -15,6 +15,7 @@ import {
 import { useNavigate } from '@tanstack/react-router'
 
 export function ProfileDropdown() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
 const navigate = useNavigate()
 const handleLogout = () => {
   localStorage.clear()
@@ -33,33 +34,33 @@ const handleLogout = () => {
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>satnaing</p>
+            {/* <p className='text-sm font-medium leading-none'>satnaing</p>   */}
             <p className='text-xs leading-none text-muted-foreground'>
-              satnaingdev@gmail.com
+           {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link to='/settings'>
               Profile
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem asChild>
             <Link to='/settings'>
               Billing
               <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem asChild>
             <Link to='/settings'>
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem>New Team</DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
