@@ -1,4 +1,4 @@
-import { addDoc, setDoc, collection, getDocs } from 'firebase/firestore'
+import { addDoc, setDoc, collection, getDocs, updateDoc, doc } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '.'
 
@@ -12,3 +12,14 @@ export const getSignBoardRequests = async () => {
     .filter((request) => !request.hasOwnProperty('userId'))
   return requests
 }
+
+
+
+export const updateRequestStatus = async (id: string, newStatus: string): Promise<void> => {
+  try {
+    await updateDoc(doc(db, "sign_board_requests", id), { isVerified: newStatus });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    throw error;
+  }
+};

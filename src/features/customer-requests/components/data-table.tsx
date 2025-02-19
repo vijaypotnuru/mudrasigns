@@ -43,7 +43,27 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: [
+      {
+        id: 'globalFilter',
+        filterFn: (row, columnId, filterValue) => {
+          const searchableColumns = [
+            'request',
+            'phoneNumber',
+            'fullName',
+            'companyName',
+            'address',
+          ]
+          return searchableColumns.some((column) => {
+            const value = row.getValue(column)
+            if (value == null) return false
+            const stringValue = value.toString().toLowerCase()
+            return stringValue.includes(filterValue.toLowerCase())
+          })
+        },
+      },
+      ...columns,
+    ],
     state: {
       sorting,
       columnVisibility,

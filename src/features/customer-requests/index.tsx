@@ -31,12 +31,12 @@ export default function CustomerRequests() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Tasks</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Customer Requests</h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your tasks for this month!
+              Here&apos;s a list of your customer requests!
             </p>
           </div>
-          <TasksPrimaryButtons />
+          {/* <TasksPrimaryButtons /> */}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <DataTable data={customerRequests || []} columns={columns} />
