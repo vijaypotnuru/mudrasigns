@@ -54,27 +54,32 @@ export const sidebarData: SidebarData = {
           title: 'Dashboard',
           url: '/',
           icon: IconLayoutDashboard,
+          roles: ['admin'],
         },
         {
           title: 'Employee Request',
           url: '/employee-request',
           icon: IconChecklist,
+          roles: ['employee'],
         },
         {
           title: 'Customer Requests',
           url: '/customer-requests',
           icon: IconChecklist,
+          roles: ['admin'],
         },
         {
           title: 'Requests By Employees',
           url: '/requests-by-employees',
           icon: IconBarrierBlock,
+          roles: ['admin'],
         },
         {
           title: 'My Leads',
           url: '/myleads',
           icon: IconChecklist,
-        }
+          roles: ['employee'],
+        },
         // {
         //   title: 'Tasks',
         //   url: '/tasks',
