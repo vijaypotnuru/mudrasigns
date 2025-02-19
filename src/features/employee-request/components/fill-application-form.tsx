@@ -67,7 +67,8 @@ export default function FillApplicationForm() {
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
   const toast = useToast()
-  const userId = localStorage.getItem('isEmployee')
+  const user = JSON.parse(localStorage.getItem('user')) 
+  const userId = user.userId
   const client = useQueryClient()
   const mutation = useMutation({
     mutationFn: (

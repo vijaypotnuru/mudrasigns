@@ -86,6 +86,12 @@ export const sidebarData: SidebarData = {
           icon: IconChecklist,
           roles: ['employee'],
         },
+        {
+          title: 'All Leads',
+          url: '/allLeads',
+          icon: IconChecklist,
+          roles: ['admin'],
+        },
         // {
         //   title: 'Tasks',
         //   url: '/tasks',
