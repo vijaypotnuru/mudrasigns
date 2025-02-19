@@ -31,7 +31,7 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Mudra Signs',
       logo: Command,
       plan: 'Vite + ShadcnUI',
     },
@@ -70,6 +70,11 @@ export const sidebarData: SidebarData = {
           url: '/requests-by-employees',
           icon: IconBarrierBlock,
         },
+        {
+          title: 'My Leads',
+          url: '/myleads',
+          icon: IconChecklist,
+        }
         // {
         //   title: 'Tasks',
         //   url: '/tasks',

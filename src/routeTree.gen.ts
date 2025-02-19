@@ -46,6 +46,9 @@ const AuthenticatedSettingsIndexLazyImport = createFileRoute(
 const AuthenticatedRequestsByEmployeesIndexLazyImport = createFileRoute(
   '/_authenticated/requests-by-employees/',
 )()
+const AuthenticatedMyleadsIndexLazyImport = createFileRoute(
+  '/_authenticated/myleads/',
+)()
 const AuthenticatedHelpCenterIndexLazyImport = createFileRoute(
   '/_authenticated/help-center/',
 )()
@@ -72,6 +75,9 @@ const AuthenticatedSettingsAppearanceLazyImport = createFileRoute(
 )()
 const AuthenticatedSettingsAccountLazyImport = createFileRoute(
   '/_authenticated/settings/account',
+)()
+const AuthenticatedRequestDetailsRequestIdIndexLazyImport = createFileRoute(
+  '/_authenticated/request-details/$requestId/',
 )()
 
 // Create/Update Routes
@@ -218,6 +224,15 @@ const AuthenticatedRequestsByEmployeesIndexLazyRoute =
     ),
   )
 
+const AuthenticatedMyleadsIndexLazyRoute =
+  AuthenticatedMyleadsIndexLazyImport.update({
+    id: '/myleads/',
+    path: '/myleads/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/myleads/index.lazy').then((d) => d.Route),
+  )
+
 const AuthenticatedHelpCenterIndexLazyRoute =
   AuthenticatedHelpCenterIndexLazyImport.update({
     id: '/help-center/',
@@ -312,6 +327,17 @@ const AuthenticatedSettingsAccountLazyRoute =
     import('./routes/_authenticated/settings/account.lazy').then(
       (d) => d.Route,
     ),
+  )
+
+const AuthenticatedRequestDetailsRequestIdIndexLazyRoute =
+  AuthenticatedRequestDetailsRequestIdIndexLazyImport.update({
+    id: '/request-details/$requestId/',
+    path: '/request-details/$requestId/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/request-details/$requestId/index.lazy'
+    ).then((d) => d.Route),
   )
 
 // Populate the FileRoutesByPath interface
@@ -479,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/myleads/': {
+      id: '/_authenticated/myleads/'
+      path: '/myleads'
+      fullPath: '/myleads'
+      preLoaderRoute: typeof AuthenticatedMyleadsIndexLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/requests-by-employees/': {
       id: '/_authenticated/requests-by-employees/'
       path: '/requests-by-employees'
@@ -505,6 +538,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof AuthenticatedUsersIndexLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/request-details/$requestId/': {
+      id: '/_authenticated/request-details/$requestId/'
+      path: '/request-details/$requestId'
+      fullPath: '/request-details/$requestId'
+      preLoaderRoute: typeof AuthenticatedRequestDetailsRequestIdIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
   }
@@ -546,9 +586,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCustomerRequestsIndexLazyRoute: typeof AuthenticatedCustomerRequestsIndexLazyRoute
   AuthenticatedEmployeeRequestIndexLazyRoute: typeof AuthenticatedEmployeeRequestIndexLazyRoute
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
+  AuthenticatedMyleadsIndexLazyRoute: typeof AuthenticatedMyleadsIndexLazyRoute
   AuthenticatedRequestsByEmployeesIndexLazyRoute: typeof AuthenticatedRequestsByEmployeesIndexLazyRoute
   AuthenticatedTasksIndexLazyRoute: typeof AuthenticatedTasksIndexLazyRoute
   AuthenticatedUsersIndexLazyRoute: typeof AuthenticatedUsersIndexLazyRoute
+  AuthenticatedRequestDetailsRequestIdIndexLazyRoute: typeof AuthenticatedRequestDetailsRequestIdIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -562,10 +604,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEmployeeRequestIndexLazyRoute:
     AuthenticatedEmployeeRequestIndexLazyRoute,
   AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
+  AuthenticatedMyleadsIndexLazyRoute: AuthenticatedMyleadsIndexLazyRoute,
   AuthenticatedRequestsByEmployeesIndexLazyRoute:
     AuthenticatedRequestsByEmployeesIndexLazyRoute,
   AuthenticatedTasksIndexLazyRoute: AuthenticatedTasksIndexLazyRoute,
   AuthenticatedUsersIndexLazyRoute: AuthenticatedUsersIndexLazyRoute,
+  AuthenticatedRequestDetailsRequestIdIndexLazyRoute:
+    AuthenticatedRequestDetailsRequestIdIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -594,10 +639,12 @@ export interface FileRoutesByFullPath {
   '/customer-requests': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/employee-request': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/myleads': typeof AuthenticatedMyleadsIndexLazyRoute
   '/requests-by-employees': typeof AuthenticatedRequestsByEmployeesIndexLazyRoute
   '/settings/': typeof AuthenticatedSettingsIndexLazyRoute
   '/tasks': typeof AuthenticatedTasksIndexLazyRoute
   '/users': typeof AuthenticatedUsersIndexLazyRoute
+  '/request-details/$requestId': typeof AuthenticatedRequestDetailsRequestIdIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -621,10 +668,12 @@ export interface FileRoutesByTo {
   '/customer-requests': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/employee-request': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/myleads': typeof AuthenticatedMyleadsIndexLazyRoute
   '/requests-by-employees': typeof AuthenticatedRequestsByEmployeesIndexLazyRoute
   '/settings': typeof AuthenticatedSettingsIndexLazyRoute
   '/tasks': typeof AuthenticatedTasksIndexLazyRoute
   '/users': typeof AuthenticatedUsersIndexLazyRoute
+  '/request-details/$requestId': typeof AuthenticatedRequestDetailsRequestIdIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -652,10 +701,12 @@ export interface FileRoutesById {
   '/_authenticated/customer-requests/': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/_authenticated/employee-request/': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/_authenticated/myleads/': typeof AuthenticatedMyleadsIndexLazyRoute
   '/_authenticated/requests-by-employees/': typeof AuthenticatedRequestsByEmployeesIndexLazyRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexLazyRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexLazyRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexLazyRoute
+  '/_authenticated/request-details/$requestId/': typeof AuthenticatedRequestDetailsRequestIdIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -683,10 +734,12 @@ export interface FileRouteTypes {
     | '/customer-requests'
     | '/employee-request'
     | '/help-center'
+    | '/myleads'
     | '/requests-by-employees'
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/request-details/$requestId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/500'
@@ -709,10 +762,12 @@ export interface FileRouteTypes {
     | '/customer-requests'
     | '/employee-request'
     | '/help-center'
+    | '/myleads'
     | '/requests-by-employees'
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/request-details/$requestId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -738,10 +793,12 @@ export interface FileRouteTypes {
     | '/_authenticated/customer-requests/'
     | '/_authenticated/employee-request/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/myleads/'
     | '/_authenticated/requests-by-employees/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/request-details/$requestId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -809,9 +866,11 @@ export const routeTree = rootRoute
         "/_authenticated/customer-requests/",
         "/_authenticated/employee-request/",
         "/_authenticated/help-center/",
+        "/_authenticated/myleads/",
         "/_authenticated/requests-by-employees/",
         "/_authenticated/tasks/",
-        "/_authenticated/users/"
+        "/_authenticated/users/",
+        "/_authenticated/request-details/$requestId/"
       ]
     },
     "/(auth)/500": {
@@ -898,6 +957,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/help-center/index.lazy.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/myleads/": {
+      "filePath": "_authenticated/myleads/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/requests-by-employees/": {
       "filePath": "_authenticated/requests-by-employees/index.lazy.tsx",
       "parent": "/_authenticated"
@@ -912,6 +975,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/users/": {
       "filePath": "_authenticated/users/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/request-details/$requestId/": {
+      "filePath": "_authenticated/request-details/$requestId/index.lazy.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -12,7 +12,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import { useNavigate } from '@tanstack/react-router'
+
 export function ProfileDropdown() {
+const navigate = useNavigate()
+const handleLogout = () => {
+  localStorage.clear()
+  navigate({ to: '/sign-in' as '/' })
+}
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -55,7 +62,7 @@ export function ProfileDropdown() {
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

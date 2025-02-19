@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { IconUpload, IconX } from '@tabler/icons-react'
 import { submitApplication } from '@/services/firebase/application'
 import { Loader2 } from 'lucide-react'
@@ -68,6 +68,7 @@ export default function FillApplicationForm() {
   const [showErrorDialog, setShowErrorDialog] = useState(false)
   const toast = useToast()
   const userId = localStorage.getItem('isEmployee')
+  const client = useQueryClient()
   const mutation = useMutation({
     mutationFn: (
       values: z.infer<typeof formSchema> & { file: File | null }
@@ -75,6 +76,7 @@ export default function FillApplicationForm() {
       return submitApplication(values)
     },
     onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['myleads'] })
       form.reset()
       setFile(null)
       setPreview(null)
@@ -117,6 +119,7 @@ export default function FillApplicationForm() {
       file,
       userId: userId,
     }
+    console.log('payload in fill application form', payload)
     mutation.mutate(payload)
   }
 

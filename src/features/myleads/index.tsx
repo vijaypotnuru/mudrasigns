@@ -1,7 +1,4 @@
-import {
-  getSignBoardRequests,
-  getSignBoardRequestsByEmployee,
-} from '@/services/firebase/customer-requests'
+import { getSignBoardRequests, getSignBoardRequestsByUserId } from '@/services/firebase/customer-requests'
 import { useQueryData } from '@/hooks/use-query-data'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -11,16 +8,17 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
 import { TasksDialogs } from './components/tasks-dialogs'
-
+import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
+import { tasks } from './data/tasks'
 
-
-export default function CustomerRequests() {
-  const { data: employeeRequests, isLoading } = useQueryData(
-    ['employee-requests'],
-    getSignBoardRequestsByEmployee
+export default function MyLeads() {
+  const userId = localStorage.getItem('isEmployee')
+  const { data: myleads, isLoading } = useQueryData(
+    ['myleads', userId],
+    () => getSignBoardRequestsByUserId(userId!)
   )
-  console.log('employeeRequests', employeeRequests)
+  console.log('myleads', myleads)
   return (
     <TasksProvider>
       <Header fixed>
@@ -35,16 +33,16 @@ export default function CustomerRequests() {
         <div className='mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Employee Requests
+              My Leads
             </h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your employee requests!
+              Here&apos;s a list of your leads!
             </p>
           </div>
           {/* <TasksPrimaryButtons /> */}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={employeeRequests || []} columns={columns} />
+          <DataTable data={myleads || []} columns={columns} />
         </div>
       </Main>
 

@@ -45,7 +45,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const empUserID = localStorage.getItem('isEmployee')
 
     if (msuser) navigate({ to: '/' as '/' })
-    if (empUserID) navigate({ to: '/employee_request' as '/' })
+    if (empUserID) navigate({ to: '/employee-request' as '/' })
   }, [navigate])
 
   function onSubmit(data: z.infer<typeof formSchema>) {
@@ -72,18 +72,18 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         data.password === 'mango@123'
       ) {
         localStorage.setItem('msadmin', 'msadmin')
-        navigate({ to: '/admin_dashboard' as '/' })
+        navigate({ to: '/' as '/' })
       } else if (validUser) {
         const userId = `msemp${marketingUsernames.indexOf(data.email) + 1}`
         localStorage.setItem('isEmployee', userId)
-        navigate({ to: '/employee_request' as '/' })
+        navigate({ to: '/employee-request' as '/' })
       } else {
         setLoginError('Invalid email or password')
       }
       setIsLoading(false)
     }, 1000)
   }
-  
+
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>
