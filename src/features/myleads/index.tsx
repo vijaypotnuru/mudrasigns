@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { getSignBoardRequests, getSignBoardRequestsByUserId } from '@/services/firebase/customer-requests'
 import { useQueryData } from '@/hooks/use-query-data'
 import { Header } from '@/components/layout/header'

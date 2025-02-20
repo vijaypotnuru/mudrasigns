@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { IconUser } from '@tabler/icons-react'
 import {
   BadgeCheck,
   Bell,
@@ -46,7 +47,9 @@ export function NavUser({
             >
               <Avatar className='h-8 w-8 rounded-lg'>
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className='rounded-lg'>SN</AvatarFallback>
+                <AvatarFallback className='rounded-lg'>
+                  <IconUser />
+                </AvatarFallback>
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight'>
                 <span className='truncate font-semibold'>{user.name}</span>

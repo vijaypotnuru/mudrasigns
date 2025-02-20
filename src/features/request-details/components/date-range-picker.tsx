@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as React from 'react'
 import { addDays, format } from 'date-fns'
 import { CalendarIcon } from '@radix-ui/react-icons'

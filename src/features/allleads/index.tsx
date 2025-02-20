@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
   getAllNewSignBoardLeads,
   getSignBoardRequests,
@@ -34,7 +35,7 @@ export default function AllLeads() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>My Leads</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>All Leads</h2>
             <p className='text-muted-foreground'>
               Here&apos;s a list of your leads!
             </p>

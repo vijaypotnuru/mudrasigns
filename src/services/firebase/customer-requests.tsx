@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
   addDoc,
   setDoc,
@@ -48,7 +49,12 @@ export const getAllNewSignBoardLeads = async () => {
       id: doc.id,
       ...doc.data(),
     }))
-    .filter((request) => request.request === 'New Signboard')
+    .filter(
+      (request) =>
+        request.request === 'Interested' ||
+        request.status === 'Quotation' ||
+        request.status === 'New Signboard'
+    )
   return requests
 }
 

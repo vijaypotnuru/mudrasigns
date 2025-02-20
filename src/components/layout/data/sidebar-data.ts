@@ -33,7 +33,7 @@ export const sidebarData: SidebarData = {
     {
       name: 'Mudra Signs',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: '',
     },
     {
       name: 'Acme Inc',

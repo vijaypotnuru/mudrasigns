@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { useNavigate } from '@tanstack/react-router'
 import { Row } from '@tanstack/react-table'

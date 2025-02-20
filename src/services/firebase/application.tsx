@@ -10,6 +10,7 @@ export interface ApplicationData {
   request: string
   file?: File | null
   userId: string
+  note: string
 }
 
 export const submitApplication = async (
@@ -40,6 +41,7 @@ export const submitApplication = async (
     fileName: data.file ? data.file.name : null,
     createdAt: unixTimestamp,
     userId: data.userId,
+    note: data.note,
   }
 
   const docRef = await addDoc(collection(db, 'sign_board_requests'), formData)

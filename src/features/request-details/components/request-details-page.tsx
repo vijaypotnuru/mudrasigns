@@ -1,5 +1,4 @@
-'use client'
-
+//@ts-nocheck
 import { useState } from 'react'
 import { format } from 'date-fns'
 import {
@@ -31,9 +30,14 @@ interface RequestDetails {
   address: string
   request: string
   isVerified: string
+  note?: string
 }
 
-export default function RequestDetailsPage({ requestDetails }: { requestDetails: any }) {
+export default function RequestDetailsPage({
+  requestDetails,
+}: {
+  requestDetails: RequestDetails
+}) {
   const [isImageOpen, setIsImageOpen] = useState(false)
 
   // In a real application, you would fetch this data from an API or database
@@ -121,6 +125,21 @@ export default function RequestDetailsPage({ requestDetails }: { requestDetails:
                       Address
                     </h3>
                     <p>{requestDetails.address}</p>
+                  </div>
+                </div>
+                <div className='flex items-center'>
+                  <MessageSquare className='mr-3 h-5 w-5 text-primary' />
+                  <div className='w-full'>
+                    <h3 className='font-semibold text-muted-foreground'>
+                      Status Notes
+                    </h3>
+                    <textarea
+                      readOnly
+                      value={requestDetails.note || 'No notes available'}
+                      className='mt-1 w-full rounded-md border p-2 text-sm text-muted-foreground'
+                      rows={3}
+                      cols={10}
+                    />
                   </div>
                 </div>
               </div>

@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
   fullName: z.string().min(2, {
@@ -55,9 +56,10 @@ const formSchema = z.object({
       required_error: 'Please select a request type.',
     }
   ),
-  isVerified: z.enum(['Option 1', 'Option 2', 'Option 3'], {
-    required_error: 'Please select an option.',
-  }),
+  // isVerified: z.enum(['Option 1', 'Option 2', 'Option 3'], {
+  //   required_error: 'Please select an option.',
+  // }),
+  note: z.string().optional(),
 })
 
 export default function FillApplicationForm() {
@@ -67,7 +69,7 @@ export default function FillApplicationForm() {
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
   const toast = useToast()
-  const user = JSON.parse(localStorage.getItem('user')) 
+  const user = JSON.parse(localStorage.getItem('user'))
   const userId = user.userId
   const client = useQueryClient()
   const mutation = useMutation({
@@ -232,13 +234,18 @@ export default function FillApplicationForm() {
                         <SelectItem value='Fully Not Working'>
                           Fully Not Working
                         </SelectItem>
+                        <SelectItem value='Interested'>Interested</SelectItem>
+                        <SelectItem value='Not Interested'>
+                          Not Interested
+                        </SelectItem>
+                        <SelectItem value='Quotation'>Quotation</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='isVerified'
                 render={({ field }) => (
@@ -259,6 +266,26 @@ export default function FillApplicationForm() {
                         <SelectItem value='Option 3'>Option 3</SelectItem>
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+              <FormField
+                control={form.control}
+                name='note'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status Notes</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder='Add any additional notes about the current status...'
+                        className='min-h-[100px]'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Optional notes about the current status
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

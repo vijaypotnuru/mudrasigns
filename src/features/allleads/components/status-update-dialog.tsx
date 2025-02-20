@@ -41,7 +41,7 @@ export function StatusUpdateDialog({
     mutationFn: (newStatus: string) =>
       updateRequestStatus(requestId, newStatus),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customer-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['allleads'] })
 
       onOpenChange(false)
       setIsConfirmOpen(false)
