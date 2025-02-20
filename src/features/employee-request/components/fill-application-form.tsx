@@ -51,7 +51,14 @@ const formSchema = z.object({
     message: 'Address must be at least 5 characters.',
   }),
   request: z.enum(
-    ['New Signboard', 'Partially Not Working', 'Fully Not Working'],
+    [
+      'New Signboard',
+      'Partially Not Working',
+      'Fully Not Working',
+      'Interested',
+      'Not Interested',
+      'Quotation',
+    ],
     {
       required_error: 'Please select a request type.',
     }

@@ -52,8 +52,8 @@ export const getAllNewSignBoardLeads = async () => {
     .filter(
       (request) =>
         request.request === 'Interested' ||
-        request.status === 'Quotation' ||
-        request.status === 'New Signboard'
+        request.request === 'Quotation' ||
+        request.request === 'New Signboard'
     )
   return requests
 }
