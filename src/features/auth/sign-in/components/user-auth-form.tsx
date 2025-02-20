@@ -1,10 +1,12 @@
-//@ts-nocheck
 import { HTMLAttributes, useState, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
+import { db } from '@/services/firebase'
+import { markAttendance, handleAutoLogout } from '@/services/firebase/user'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -53,51 +55,48 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true)
     setLoginError('')
 
-    // Mock authentication logic
-    const marketingUsernames = Array.from(
-      { length: 10 },
-      (_, i) => `Marketingperson${i + 1}@employ.com`
-    )
-    const marketingPasswords = Array.from(
-      { length: 10 },
-      (_, i) => `Mudra@emp${i + 1}`
-    )
-    const validUser = marketingUsernames.find(
-      (username, index) =>
-        username === data.email && marketingPasswords[index] === data.password
-    )
+    setTimeout(async () => {
+      try {
+        // Check user in Firestore
+        const usersRef = collection(db, 'mudra_sign_users')
+        const q = query(
+          usersRef,
+          where('email', '==', data.email),
+          where('password', '==', data.password)
+        )
 
-    setTimeout(() => {
-      if (
-        data.email === 'mudrasigns@admin.com' &&
-        data.password === 'mango@123'
-      ) {
-        localStorage.setItem('msadmin', 'msadmin')
+        const querySnapshot = await getDocs(q)
 
-        const userDetails = {
-          userId: 'msadmin',
-          email: data.email,
-          password: data.password,
-          role: 'admin',
+        if (querySnapshot.empty) {
+          setLoginError('Invalid email or password')
+          return
         }
-        localStorage.setItem('user', JSON.stringify(userDetails))
-        navigate({ to: '/' as '/' })
-      } else if (validUser) {
-        const userId = `msemp${marketingUsernames.indexOf(data.email) + 1}`
-        localStorage.setItem('isEmployee', userId)
 
-        const userDetails = {
-          userId: userId,
-          email: data.email,
-          password: data.password,
-          role: 'employee',
+        const userDoc = querySnapshot.docs[0]
+        const userData = userDoc.data()
+        localStorage.setItem('user', JSON.stringify(userData))
+
+        if (userData.role === 'admin') {
+          localStorage.setItem('msadmin', 'msadmin')
+          console.log('user in login admin', userData)
+          localStorage.setItem('user', JSON.stringify(userData))
+          navigate({ to: '/' as '/' })
+        } else if (userData.role === 'employee') {
+          localStorage.setItem('isEmployee', userDoc.id)
+          console.log('user in login employee', userData)
+          localStorage.setItem('user', JSON.stringify(userData))
+
+          await markAttendance(userDoc.id)
+          navigate({ to: '/employee-request' as '/' })
+        } else {
+          setLoginError('Unauthorized access')
         }
-        localStorage.setItem('user', JSON.stringify(userDetails))
-        navigate({ to: '/employee-request' as '/' })
-      } else {
-        setLoginError('Invalid email or password')
+      } catch (error) {
+        console.error('Login error:', error)
+        setLoginError('An error occurred during login')
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }, 1000)
   }
 

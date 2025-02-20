@@ -1,5 +1,6 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { IconUser } from '@tabler/icons-react'
+import { markLogout } from '@/services/firebase/user'
 import {
   BadgeCheck,
   Bell,
@@ -35,6 +36,21 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}')
+      if (userData.role === 'employee') {
+        await markLogout(userData.userId)
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      localStorage.clear()
+      navigate({ to: '/sign-in' })
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -105,7 +121,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
