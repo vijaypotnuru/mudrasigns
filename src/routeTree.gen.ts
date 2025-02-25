@@ -58,6 +58,9 @@ const AuthenticatedEmployeeRequestIndexLazyImport = createFileRoute(
 const AuthenticatedCustomerRequestsIndexLazyImport = createFileRoute(
   '/_authenticated/customer-requests/',
 )()
+const AuthenticatedCreateInvoiceIndexLazyImport = createFileRoute(
+  '/_authenticated/create-invoice/',
+)()
 const AuthenticatedChatsIndexLazyImport = createFileRoute(
   '/_authenticated/chats/',
 )()
@@ -271,6 +274,17 @@ const AuthenticatedCustomerRequestsIndexLazyRoute =
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
     import('./routes/_authenticated/customer-requests/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AuthenticatedCreateInvoiceIndexLazyRoute =
+  AuthenticatedCreateInvoiceIndexLazyImport.update({
+    id: '/create-invoice/',
+    path: '/create-invoice/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/create-invoice/index.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -538,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChatsIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/create-invoice/': {
+      id: '/_authenticated/create-invoice/'
+      path: '/create-invoice'
+      fullPath: '/create-invoice'
+      preLoaderRoute: typeof AuthenticatedCreateInvoiceIndexLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/customer-requests/': {
       id: '/_authenticated/customer-requests/'
       path: '/customer-requests'
@@ -646,6 +667,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAllrequestsIndexLazyRoute: typeof AuthenticatedAllrequestsIndexLazyRoute
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
   AuthenticatedChatsIndexLazyRoute: typeof AuthenticatedChatsIndexLazyRoute
+  AuthenticatedCreateInvoiceIndexLazyRoute: typeof AuthenticatedCreateInvoiceIndexLazyRoute
   AuthenticatedCustomerRequestsIndexLazyRoute: typeof AuthenticatedCustomerRequestsIndexLazyRoute
   AuthenticatedEmployeeRequestIndexLazyRoute: typeof AuthenticatedEmployeeRequestIndexLazyRoute
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
@@ -666,6 +688,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedAllrequestsIndexLazyRoute,
   AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
   AuthenticatedChatsIndexLazyRoute: AuthenticatedChatsIndexLazyRoute,
+  AuthenticatedCreateInvoiceIndexLazyRoute:
+    AuthenticatedCreateInvoiceIndexLazyRoute,
   AuthenticatedCustomerRequestsIndexLazyRoute:
     AuthenticatedCustomerRequestsIndexLazyRoute,
   AuthenticatedEmployeeRequestIndexLazyRoute:
@@ -707,6 +731,7 @@ export interface FileRoutesByFullPath {
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
   '/chats': typeof AuthenticatedChatsIndexLazyRoute
+  '/create-invoice': typeof AuthenticatedCreateInvoiceIndexLazyRoute
   '/customer-requests': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/employee-request': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
@@ -739,6 +764,7 @@ export interface FileRoutesByTo {
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
   '/chats': typeof AuthenticatedChatsIndexLazyRoute
+  '/create-invoice': typeof AuthenticatedCreateInvoiceIndexLazyRoute
   '/customer-requests': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/employee-request': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
@@ -775,6 +801,7 @@ export interface FileRoutesById {
   '/_authenticated/allrequests/': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexLazyRoute
+  '/_authenticated/create-invoice/': typeof AuthenticatedCreateInvoiceIndexLazyRoute
   '/_authenticated/customer-requests/': typeof AuthenticatedCustomerRequestsIndexLazyRoute
   '/_authenticated/employee-request/': typeof AuthenticatedEmployeeRequestIndexLazyRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute
@@ -811,6 +838,7 @@ export interface FileRouteTypes {
     | '/allrequests'
     | '/apps'
     | '/chats'
+    | '/create-invoice'
     | '/customer-requests'
     | '/employee-request'
     | '/help-center'
@@ -842,6 +870,7 @@ export interface FileRouteTypes {
     | '/allrequests'
     | '/apps'
     | '/chats'
+    | '/create-invoice'
     | '/customer-requests'
     | '/employee-request'
     | '/help-center'
@@ -876,6 +905,7 @@ export interface FileRouteTypes {
     | '/_authenticated/allrequests/'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
+    | '/_authenticated/create-invoice/'
     | '/_authenticated/customer-requests/'
     | '/_authenticated/employee-request/'
     | '/_authenticated/help-center/'
@@ -952,6 +982,7 @@ export const routeTree = rootRoute
         "/_authenticated/allrequests/",
         "/_authenticated/apps/",
         "/_authenticated/chats/",
+        "/_authenticated/create-invoice/",
         "/_authenticated/customer-requests/",
         "/_authenticated/employee-request/",
         "/_authenticated/help-center/",
@@ -1041,6 +1072,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/chats/": {
       "filePath": "_authenticated/chats/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/create-invoice/": {
+      "filePath": "_authenticated/create-invoice/index.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/customer-requests/": {

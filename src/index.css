@@ -37,6 +37,12 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --billing-card-bg: 0 0% 100%;
+    --billing-card-border: 214.3 31.8% 91.4%;
+    --billing-text-primary: 222.2 84% 4.9%;
+    --billing-text-secondary: 215.4 16.3% 46.9%;
+    --billing-highlight: 201 96% 32%;
+    --billing-highlight-hover: 201 96% 28%;
   }
   .dark {
     --background: 222.2 84% 4.9%;
@@ -71,6 +77,12 @@
     --sidebar-accent-foreground: var(--accent-foreground);
     --sidebar-border: var(--border);
     --sidebar-ring: var(--ring);
+    --billing-card-bg: var(--background);
+    --billing-card-border: var(--border);
+    --billing-text-primary: var(--foreground);
+    --billing-text-secondary: var(--muted-foreground);
+    --billing-highlight: var(--accent);
+    --billing-highlight-hover: var(--accent);
   }
 
   /* styles.css */
