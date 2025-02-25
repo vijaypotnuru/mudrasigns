@@ -296,76 +296,83 @@ export default function FillApplicationForm() {
                 )}
               />
               <FormItem>
-                <FormLabel>Take Photo (Optional)</FormLabel>
+                <FormLabel>Attach Photos (Optional)</FormLabel>
                 <FormControl>
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-4'>
                     <div
-                      className='relative h-32 w-full cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600'
+                      className='group relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 bg-muted/50 transition-all hover:border-primary hover:bg-muted/30'
                       onClick={() =>
                         document.getElementById('file-upload')?.click()
                       }
                     >
-                      {previews.map((preview, index) => (
-                        <div
-                          key={index}
-                          className='absolute inset-0 flex items-center justify-center'
-                        >
-                          <img
-                            src={preview}
-                            alt={`Preview ${index + 1}`}
-                            className='h-full w-full rounded-lg object-contain p-2'
-                          />
-                        </div>
-                      ))}
-                      <Input
-                        id='file-upload'
-                        type='file'
-                        multiple
-                        accept='image/jpeg, image/jpg, image/png'
-                        className='hidden'
-                        onChange={(e) => {
-                          const newFiles = Array.from(e.target.files || [])
-                          const validFiles = newFiles.filter(
-                            (file) =>
-                              file.type.startsWith('image/') &&
-                              file.size <= 5 * 1024 * 1024
-                          )
-
-                          if (validFiles.length !== newFiles.length) {
-                            form.setError('root', {
-                              type: 'manual',
-                              message: 'Only image files under 5MB are allowed',
-                            })
-                          }
-
-                          setFiles((prev) => [...prev, ...validFiles])
-                        }}
-                      />
+                      <div className='flex flex-col items-center justify-center space-y-2 text-muted-foreground transition-colors group-hover:text-primary'>
+                        <IconUpload className='h-8 w-8' />
+                        <p className='text-sm font-medium'>
+                          Click to upload or drag and drop
+                        </p>
+                        <p className='text-xs'>JPEG, JPG, PNG </p>
+                      </div>
                     </div>
 
-                    {files.map((file, index) => (
-                      <div
-                        key={index}
-                        className='flex items-center gap-2 rounded-md border bg-muted/50 p-2 text-sm'
-                      >
-                        <span className='flex-1 truncate text-muted-foreground'>
-                          {file.name}
-                        </span>
-                        <Button
-                          variant='ghost'
-                          size='icon'
-                          className='h-5 w-5 text-red-500 hover:text-red-600'
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setFiles((prev) =>
-                              prev.filter((_, i) => i !== index)
-                            )
-                          }}
-                        >
-                          <IconX className='h-4 w-4' />
-                        </Button>
+                    {previews.length > 0 && (
+                      <div className='grid grid-cols-3 gap-4'>
+                        {previews.map((preview, index) => (
+                          <div
+                            key={index}
+                            className='group relative aspect-square overflow-hidden rounded-lg border bg-background'
+                          >
+                            <img
+                              src={preview}
+                              alt={`Preview ${index + 1}`}
+                              className='h-full w-full object-cover transition-transform group-hover:scale-105'
+                            />
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              className='absolute right-1 top-1 h-6 w-6 rounded-full bg-destructive/80 p-1 opacity-0 transition-all hover:bg-destructive group-hover:opacity-100'
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setFiles((prev) =>
+                                  prev.filter((_, i) => i !== index)
+                                )
+                              }}
+                            >
+                              <IconX className='h-4 w-4 text-white' />
+                            </Button>
+                            <div className='absolute bottom-0 w-full bg-black/50 p-1'>
+                              <p className='line-clamp-1 text-xs text-white'>
+                                {files[index]?.name}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
+
+                    <Input
+                      id='file-upload'
+                      type='file'
+                      multiple
+                      accept='image/jpeg, image/jpg, image/png'
+                      className='hidden'
+                      onChange={(e) => {
+                        const newFiles = Array.from(e.target.files || [])
+                        const validFiles = newFiles.filter(
+                          (file) =>
+                            file.type.startsWith('image/') &&
+                            file.size <= 5 * 1024 * 1024
+                        )
+
+                        if (validFiles.length !== newFiles.length) {
+                          form.setError('root', {
+                            type: 'manual',
+                            message: 'Only image files under 5MB are allowed',
+                          })
+                        }
+
+                        setFiles((prev) => [...prev, ...validFiles])
+                      }}
+                    />
                   </div>
                 </FormControl>
                 <FormMessage />
