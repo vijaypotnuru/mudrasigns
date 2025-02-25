@@ -8,7 +8,7 @@ export interface ApplicationData {
   companyName: string
   address: string
   request: string
-  file?: File | null
+  files?: File[] | null
   userId: string
   note: string
 }
@@ -16,16 +16,23 @@ export interface ApplicationData {
 export const submitApplication = async (
   data: ApplicationData
 ): Promise<string> => {
-  let fileURL: string | null = null
+  let fileURLs: string[] = []
+  let fileNames: string[] = []
 
-  // Upload the file if provided
-  if (data.file) {
-    const fileRef = ref(
-      storage,
-      `msreports/${data.phoneNumber}/${data.file.name}`
+  if (data.files && data.files.length > 0) {
+    await Promise.all(
+      data.files.map(async (file) => {
+        const uniqueFileName = `${Date.now()}-${file.name}`
+        const fileRef = ref(
+          storage,
+          `msreports/${data.phoneNumber}/${uniqueFileName}`
+        )
+        await uploadBytes(fileRef, file)
+        const url = await getDownloadURL(fileRef)
+        fileURLs.push(url)
+        fileNames.push(uniqueFileName)
+      })
     )
-    await uploadBytes(fileRef, data.file)
-    fileURL = await getDownloadURL(fileRef)
   }
 
   const unixTimestamp = Date.now()
@@ -36,9 +43,9 @@ export const submitApplication = async (
     address: data.address,
     request: data.request,
     invoiceURL: '',
-    fileURL,
+    fileURLs,
+    fileNames: fileNames.length > 0 ? fileNames : null,
     isVerified: 'Not Verified',
-    fileName: data.file ? data.file.name : null,
     createdAt: unixTimestamp,
     userId: data.userId,
     note: data.note,

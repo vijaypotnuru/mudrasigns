@@ -174,45 +174,45 @@ export const columns: ColumnDef<Task>[] = [
       )
     },
   },
-  {
-    accessorKey: 'fileURL',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='File' />
-    ),
-    cell: ({ row }) => {
-      const fileURL = row.getValue('fileURL') as string
-      const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  // {
+  //   accessorKey: 'fileURL',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='File' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const fileURL = row.getValue('fileURL') as string
+  //     const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
-      return (
-        <div className='flex space-x-2'>
-          {fileURL ? (
-            <>
-              <Avatar
-                className='h-10 w-10 cursor-pointer rounded-md'
-                onClick={() => setIsPreviewOpen(true)}
-              >
-                <AvatarImage src={fileURL} className='rounded-md' />
-                <AvatarFallback>File</AvatarFallback>
-              </Avatar>
-              <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className='max-w-[95vw] px-1 sm:max-w-2xl'>
-                  <div className='flex h-full items-center justify-center'>
-                    <img
-                      src={fileURL}
-                      alt='Full preview'
-                      className='h-auto max-h-[80vh] w-full rounded-md object-contain'
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </>
-          ) : (
-            <span className='text-muted-foreground'>No file</span>
-          )}
-        </div>
-      )
-    },
-  },
+  //     return (
+  //       <div className='flex space-x-2'>
+  //         {fileURL ? (
+  //           <>
+  //             <Avatar
+  //               className='h-10 w-10 cursor-pointer rounded-md'
+  //               onClick={() => setIsPreviewOpen(true)}
+  //             >
+  //               <AvatarImage src={fileURL} className='rounded-md' />
+  //               <AvatarFallback>File</AvatarFallback>
+  //             </Avatar>
+  //             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+  //               <DialogContent className='max-w-[95vw] px-1 sm:max-w-2xl'>
+  //                 <div className='flex h-full items-center justify-center'>
+  //                   <img
+  //                     src={fileURL}
+  //                     alt='Full preview'
+  //                     className='h-auto max-h-[80vh] w-full rounded-md object-contain'
+  //                   />
+  //                 </div>
+  //               </DialogContent>
+  //             </Dialog>
+  //           </>
+  //         ) : (
+  //           <span className='text-muted-foreground'>No file</span>
+  //         )}
+  //       </div>
+  //     )
+  //   },
+  // },
   {
     accessorKey: 'isVerified',
     header: ({ column }) => (

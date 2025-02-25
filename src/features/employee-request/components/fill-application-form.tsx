@@ -70,8 +70,8 @@ const formSchema = z.object({
 })
 
 export default function FillApplicationForm() {
-  const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [files, setFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
@@ -80,16 +80,14 @@ export default function FillApplicationForm() {
   const userId = user.userId
   const client = useQueryClient()
   const mutation = useMutation({
-    mutationFn: (
-      values: z.infer<typeof formSchema> & { file: File | null }
-    ) => {
+    mutationFn: (values: z.infer<typeof formSchema> & { files: File[] }) => {
       return submitApplication(values)
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ['myleads'] })
       form.reset()
-      setFile(null)
-      setPreview(null)
+      setFiles([])
+      setPreviews([])
       setShowSuccessDialog(true)
     },
     onError: (error) => {
@@ -112,21 +110,21 @@ export default function FillApplicationForm() {
   })
 
   useEffect(() => {
-    if (!file) {
-      setPreview(null)
+    if (!files || files.length === 0) {
+      setPreviews([])
       return
     }
 
-    const objectUrl = URL.createObjectURL(file)
-    setPreview(objectUrl)
+    const objectUrls = files.map((file) => URL.createObjectURL(file))
+    setPreviews(objectUrls)
 
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [file])
+    return () => objectUrls.forEach((url) => URL.revokeObjectURL(url))
+  }, [files])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const payload = {
       ...values,
-      file,
+      files: files,
       userId: userId,
     }
     console.log('payload in fill application form', payload)
@@ -307,51 +305,49 @@ export default function FillApplicationForm() {
                         document.getElementById('file-upload')?.click()
                       }
                     >
-                      {preview ? (
-                        <div className='absolute inset-0 flex items-center justify-center'>
+                      {previews.map((preview, index) => (
+                        <div
+                          key={index}
+                          className='absolute inset-0 flex items-center justify-center'
+                        >
                           <img
                             src={preview}
-                            alt='Preview'
+                            alt={`Preview ${index + 1}`}
                             className='h-full w-full rounded-lg object-contain p-2'
                           />
                         </div>
-                      ) : (
-                        <div className='absolute inset-0 flex flex-col items-center justify-center gap-2'>
-                          <IconUpload className='h-6 w-6 text-gray-500 dark:text-gray-400' />
-                          <div className='flex flex-col items-center gap-1'>
-                            <p className='text-sm text-gray-500 dark:text-gray-400'>
-                              <span className='font-semibold'>
-                                Click to upload
-                              </span>{' '}
-                              or drag and drop
-                            </p>
-                            <p className='text-xs text-gray-500 dark:text-gray-400'>
-                              JPEG, JPG, PNG (MAX. 5MB)
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                      ))}
                       <Input
                         id='file-upload'
                         type='file'
+                        multiple
                         accept='image/jpeg, image/jpg, image/png'
                         className='hidden'
                         onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (file && !file.type.startsWith('image/')) {
+                          const newFiles = Array.from(e.target.files || [])
+                          const validFiles = newFiles.filter(
+                            (file) =>
+                              file.type.startsWith('image/') &&
+                              file.size <= 5 * 1024 * 1024
+                          )
+
+                          if (validFiles.length !== newFiles.length) {
                             form.setError('root', {
                               type: 'manual',
-                              message: 'Only image files are allowed',
+                              message: 'Only image files under 5MB are allowed',
                             })
-                            return
                           }
-                          setFile(file || null)
+
+                          setFiles((prev) => [...prev, ...validFiles])
                         }}
                       />
                     </div>
 
-                    {file && (
-                      <div className='flex items-center gap-2 rounded-md border bg-muted/50 p-2 text-sm'>
+                    {files.map((file, index) => (
+                      <div
+                        key={index}
+                        className='flex items-center gap-2 rounded-md border bg-muted/50 p-2 text-sm'
+                      >
                         <span className='flex-1 truncate text-muted-foreground'>
                           {file.name}
                         </span>
@@ -361,13 +357,15 @@ export default function FillApplicationForm() {
                           className='h-5 w-5 text-red-500 hover:text-red-600'
                           onClick={(e) => {
                             e.stopPropagation()
-                            setFile(null)
+                            setFiles((prev) =>
+                              prev.filter((_, i) => i !== index)
+                            )
                           }}
                         >
                           <IconX className='h-4 w-4' />
                         </Button>
                       </div>
-                    )}
+                    ))}
                   </div>
                 </FormControl>
                 <FormMessage />

@@ -25,12 +25,13 @@ interface RequestDetails {
   reqId: string
   companyName: string
   phoneNumber: string
-  fileURL: string
-  fileName: string
+  fileURLs: string[]
+  fileNames: string[]
   address: string
   request: string
   isVerified: string
   note?: string
+  userId: string
 }
 
 export default function RequestDetailsPage({
@@ -148,31 +149,52 @@ export default function RequestDetailsPage({
 
               <div>
                 <h3 className='mb-4 font-semibold text-muted-foreground'>
-                  Attached File
+                  Attached Files
                 </h3>
-                <Dialog open={isImageOpen} onOpenChange={setIsImageOpen}>
-                  <DialogTrigger asChild>
-                    <div className='relative mx-auto aspect-video w-full max-w-lg cursor-pointer overflow-hidden rounded-lg transition-opacity duration-300 hover:opacity-90'>
-                      <img
-                        src={requestDetails.fileURL || '/placeholder.svg'}
-                        alt={requestDetails.fileName}
-                        className='object-contain'
-                      />
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className='max-w-4xl'>
-                    <div className='relative aspect-video w-full'>
-                      <img
-                        src={requestDetails.fileURL || '/placeholder.svg'}
-                        alt={requestDetails.fileName}
-                        className='object-contain'
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                <p className='mt-2 text-center text-sm text-muted-foreground'>
-                  {requestDetails.fileName}
-                </p>
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+                  {requestDetails.fileURLs?.map((url, index) => (
+                    <Dialog
+                      key={index}
+                      open={isImageOpen}
+                      onOpenChange={setIsImageOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <div className='relative aspect-video w-full cursor-pointer overflow-hidden rounded-lg transition-opacity duration-300 hover:opacity-90'>
+                          <img
+                            src={url || '/placeholder.svg'}
+                            alt={
+                              requestDetails.fileNames[index] || 'Uploaded file'
+                            }
+                            className='h-full w-full object-cover'
+                          />
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent className='max-w-4xl'>
+                        <div className='relative aspect-video w-full'>
+                          <img
+                            src={url || '/placeholder.svg'}
+                            alt={
+                              requestDetails.fileNames[index] || 'Uploaded file'
+                            }
+                            className='object-contain'
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ))}
+                </div>
+                {requestDetails.fileNames?.length > 0 && (
+                  <div className='mt-4 space-y-1'>
+                    <p className='text-sm font-medium text-muted-foreground'>
+                      File Names:
+                    </p>
+                    <ul className='list-disc space-y-1 pl-4 text-sm'>
+                      {requestDetails.fileNames.map((name, index) => (
+                        <li key={index}>{name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

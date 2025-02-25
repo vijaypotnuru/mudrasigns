@@ -86,7 +86,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           console.log('user in login employee', userData)
           localStorage.setItem('user', JSON.stringify(userData))
 
-          await markAttendance(userDoc.id)
+          // await markAttendance(userDoc.id)
           navigate({ to: '/employee-request' as '/' })
         } else {
           setLoginError('Unauthorized access')
