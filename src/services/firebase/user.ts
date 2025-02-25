@@ -17,7 +17,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '.'
 
 export async function markAttendance(userId: string) {
-  const attendanceRef = collection(db, 'attendance_records')
+  const attendanceRef = collection(db, 'mudra_signs_attendance_records')
 
   // Get current date boundaries
   const now = new Date()
@@ -50,7 +50,7 @@ export async function markAttendance(userId: string) {
 
 export async function markLogout(userId: string) {
   const q = query(
-    collection(db, 'attendance_records'),
+    collection(db, 'mudra_signs_attendance_records'),
     where('userId', '==', userId),
     where('logoutTime', '==', null),
     orderBy('loginTime', 'desc'),
@@ -60,7 +60,11 @@ export async function markLogout(userId: string) {
   const snapshot = await getDocs(q)
 
   if (!snapshot.empty) {
-    const docRef = doc(db, 'attendance_records', snapshot.docs[0].id)
+    const docRef = doc(
+      db,
+      'mudra_signs_attendance_records',
+      snapshot.docs[0].id
+    )
     const loginTime = snapshot.docs[0].data().loginTime.toDate()
     const logoutTime = new Date()
 
@@ -77,7 +81,7 @@ export async function handleAutoLogout() {
   midnight.setHours(24, 0, 0, 0) // Next midnight
 
   const q = query(
-    collection(db, 'attendance_records'),
+    collection(db, 'mudra_signs_attendance_records'),
     where('logoutTime', '==', null),
     where('loginTime', '<=', midnight)
   )
@@ -96,4 +100,23 @@ export async function handleAutoLogout() {
       status: 'auto_completed',
     })
   })
+}
+
+export async function getAttendanceHistory(userId: string) {
+  const q = query(
+    collection(db, 'mudra_signs_attendance_records'),
+    where('userId', '==', userId),
+    orderBy('loginTime', 'desc')
+  )
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+}
+
+export async function getAllAttendanceHistory() {
+  const q = query(
+    collection(db, 'mudra_signs_attendance_records'),
+    orderBy('loginTime', 'desc')
+  )
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 }
