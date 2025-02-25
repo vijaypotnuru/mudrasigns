@@ -8,6 +8,7 @@ import {
   IconCircleLetterLFilled,
   IconError404,
   IconHelp,
+  IconInvoice,
   IconLayoutDashboard,
   IconLock,
   IconLockAccess,
@@ -15,6 +16,7 @@ import {
   IconNotification,
   IconPackages,
   IconPalette,
+  IconReceiptRupee,
   IconServerOff,
   IconSettings,
   IconTool,
@@ -153,7 +155,55 @@ export const sidebarData: SidebarData = {
         },
       ],
     },
-    
+    {
+      title: 'Invoice Management',
+      roles: ['admin'],
+      items: [
+        {
+          title: 'Create Invoice',
+          url: '/create-invoice',
+          icon: IconReceiptRupee,
+          roles: ['admin'],
+        },
+        {
+          title: 'All Invoices',
+          url: '/all-invoices',
+          icon: IconInvoice,
+          roles: ['admin'],
+        },
+        // {
+        //   title: 'Employee Request',
+        //   url: '/employee-request',
+        //   icon: IconChecklist,
+        //   roles: ['employee'],
+        // },
+        // {
+        //   title: 'All Requests',
+        //   url: '/allrequests',
+        //   icon: IconChecklist,
+        //   roles: ['admin'],
+        // },
+        // {
+        //   title: 'Customer Requests',
+        //   url: '/customer-requests',
+        //   icon: IconChecklist,
+        //   roles: ['admin'],
+        // },
+        // {
+        //   title: 'Requests By Employees',
+        //   url: '/requests-by-employees',
+        //   icon: IconBarrierBlock,
+        //   roles: ['admin'],
+        // },
+        // {
+        //   title: 'My Leads',
+        //   url: '/myleads',
+        //   icon: IconChecklist,
+        //   roles: ['employee'],
+        // },
+      ],
+    },
+
     // {
     //   title: 'Other',
     //   items: [
