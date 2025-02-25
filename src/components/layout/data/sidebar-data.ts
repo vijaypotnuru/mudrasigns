@@ -56,30 +56,30 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
           roles: ['admin'],
         },
-        {
-          title: 'Employee Request',
-          url: '/employee-request',
-          icon: IconChecklist,
-          roles: ['employee'],
-        },
-        {
-          title: 'All Requests',
-          url: '/allrequests',
-          icon: IconChecklist,
-          roles: ['admin'],
-        },
-        {
-          title: 'Customer Requests',
-          url: '/customer-requests',
-          icon: IconChecklist,
-          roles: ['admin'],
-        },
-        {
-          title: 'Requests By Employees',
-          url: '/requests-by-employees',
-          icon: IconBarrierBlock,
-          roles: ['admin'],
-        },
+        // {
+        //   title: 'Employee Request',
+        //   url: '/employee-request',
+        //   icon: IconChecklist,
+        //   roles: ['employee'],
+        // },
+        // {
+        //   title: 'All Requests',
+        //   url: '/allrequests',
+        //   icon: IconChecklist,
+        //   roles: ['admin'],
+        // },
+        // {
+        //   title: 'Customer Requests',
+        //   url: '/customer-requests',
+        //   icon: IconChecklist,
+        //   roles: ['admin'],
+        // },
+        // {
+        //   title: 'Requests By Employees',
+        //   url: '/requests-by-employees',
+        //   icon: IconBarrierBlock,
+        //   roles: ['admin'],
+        // },
         {
           title: 'My Leads',
           url: '/myleads',
@@ -115,68 +115,25 @@ export const sidebarData: SidebarData = {
         // },
       ],
     },
-    // {
-    //   title: 'Pages',
-    //   items: [
-    //     {
-    //       title: 'Auth',
-    //       icon: IconLockAccess,
-    //       items: [
-    //         {
-    //           title: 'Sign In',
-    //           url: '/sign-in',
-    //         },
-    //         {
-    //           title: 'Sign In (2 Col)',
-    //           url: '/sign-in-2',
-    //         },
-    //         {
-    //           title: 'Sign Up',
-    //           url: '/sign-up',
-    //         },
-    //         {
-    //           title: 'Forgot Password',
-    //           url: '/forgot-password',
-    //         },
-    //         {
-    //           title: 'OTP',
-    //           url: '/otp',
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: 'Errors',
-    //       icon: IconBug,
-    //       items: [
-    //         {
-    //           title: 'Unauthorized',
-    //           url: '/401',
-    //           icon: IconLock,
-    //         },
-    //         {
-    //           title: 'Forbidden',
-    //           url: '/403',
-    //           icon: IconUserOff,
-    //         },
-    //         {
-    //           title: 'Not Found',
-    //           url: '/404',
-    //           icon: IconError404,
-    //         },
-    //         {
-    //           title: 'Internal Server Error',
-    //           url: '/500',
-    //           icon: IconServerOff,
-    //         },
-    //         {
-    //           title: 'Maintenance Error',
-    //           url: '/503',
-    //           icon: IconBarrierBlock,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
+    {
+      title: 'Lead Management',
+      items: [
+        {
+          title: 'Leads By Employees',
+          icon: IconLockAccess,
+          items: [
+            // {
+            //   title: 'Marketingperson1',
+            //   url: '/employee/7MJR1FvZGVlnBNDZdBeS',
+            // },
+            // {
+            //   title: 'demo-employee',
+            //   url: '/employee/eYhtaZxoUaH44ceUMVGw',
+            // },
+          ],
+        },
+      ],
+    },
     // {
     //   title: 'Other',
     //   items: [

@@ -1,4 +1,6 @@
 //@ts-nocheck
+import { useState, useEffect } from 'react'
+import { getAllEmployees } from '@/services/firebase/user'
 import {
   Sidebar,
   SidebarContent,
@@ -14,15 +16,37 @@ import { sidebarData } from './data/sidebar-data'
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   const role = user?.role || 'employee'
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      const employees = await getAllEmployees()
+      setEmployees(employees)
+    }
+    fetchEmployees()
+  }, [])
 
   const getFilteredNavGroups = () => {
-    return sidebarData.navGroups.map((group: any) => ({
-      ...group,
-      items: group.items.filter((item: any) => {
-        if (!item.roles) return true
-        return item.roles.includes(role)
-      }),
-    }))
+    return sidebarData.navGroups.map((group) => {
+      if (group.title === 'Lead Management') {
+        return {
+          ...group,
+          items: group.items.map((item) => {
+            if (item.title === 'Leads By Employees') {
+              return {
+                ...item,
+                items: employees.map((employee) => ({
+                  title: employee.name,
+                  url: `/employee/${employee.id}`,
+                })),
+              }
+            }
+            return item
+          }),
+        }
+      }
+      return group
+    })
   }
 
   return (

@@ -2,6 +2,7 @@
 import { Link } from '@tanstack/react-router'
 import { useNavigate } from '@tanstack/react-router'
 import { IconUser } from '@tabler/icons-react'
+import { handleAutoLogout } from '@/services/firebase/user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,7 +19,8 @@ import {
 export function ProfileDropdown() {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   const navigate = useNavigate()
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // await handleAutoLogout()
     localStorage.clear()
     navigate({ to: '/sign-in' as '/' })
   }

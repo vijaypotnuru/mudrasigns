@@ -120,3 +120,12 @@ export async function getAllAttendanceHistory() {
   const snapshot = await getDocs(q)
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 }
+
+export async function getAllEmployees() {
+  const q = query(
+    collection(db, 'mudra_sign_users'),
+    where('role', '==', 'employee')
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
