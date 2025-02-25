@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { getAllEmployees } from '@/services/firebase/user'
 import {
   Sidebar,
@@ -16,37 +16,45 @@ import { sidebarData } from './data/sidebar-data'
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   const role = user?.role || 'employee'
-  const [employees, setEmployees] = useState([])
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      const employees = await getAllEmployees()
-      setEmployees(employees)
-    }
-    fetchEmployees()
-  }, [])
+  const employeesQuery = useQuery({
+    queryKey: ['employees'],
+    queryFn: () => getAllEmployees(),
+  })
 
   const getFilteredNavGroups = () => {
-    return sidebarData.navGroups.map((group) => {
-      if (group.title === 'Lead Management') {
-        return {
-          ...group,
-          items: group.items.map((item) => {
-            if (item.title === 'Leads By Employees') {
+    return sidebarData.navGroups
+      .filter((group) => {
+        if (group.roles) {
+          return group.roles.includes(role)
+        }
+        return true
+      })
+      .map((group) => ({
+        ...group,
+        items: group.items
+          .filter((item) => {
+            if (item.roles) {
+              return item.roles.includes(role)
+            }
+            return true
+          })
+          .map((item) => {
+            if (
+              group.title === 'Lead Management' &&
+              item.title === 'Leads By Employees'
+            ) {
               return {
                 ...item,
-                items: employees.map((employee) => ({
+                items: (employeesQuery.data || []).map((employee) => ({
                   title: employee.name,
-                  url: `/employee/${employee.id}`,
+                  url: `/employeeleads/${employee.id}`,
                 })),
               }
             }
             return item
           }),
-        }
-      }
-      return group
-    })
+      }))
   }
 
   return (

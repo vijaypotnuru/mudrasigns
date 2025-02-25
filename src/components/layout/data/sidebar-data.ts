@@ -4,6 +4,8 @@ import {
   IconBrowserCheck,
   IconBug,
   IconChecklist,
+  IconCircleLetterL,
+  IconCircleLetterLFilled,
   IconError404,
   IconHelp,
   IconLayoutDashboard,
@@ -56,12 +58,12 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
           roles: ['admin'],
         },
-        // {
-        //   title: 'Employee Request',
-        //   url: '/employee-request',
-        //   icon: IconChecklist,
-        //   roles: ['employee'],
-        // },
+        {
+          title: 'Employee Request',
+          url: '/employee-request',
+          icon: IconChecklist,
+          roles: ['employee'],
+        },
         // {
         //   title: 'All Requests',
         //   url: '/allrequests',
@@ -86,12 +88,12 @@ export const sidebarData: SidebarData = {
           icon: IconChecklist,
           roles: ['employee'],
         },
-        {
-          title: 'All Leads',
-          url: '/allLeads',
-          icon: IconChecklist,
-          roles: ['admin'],
-        },
+        // {
+        //   title: 'All Leads',
+        //   url: '/allLeads',
+        //   icon: IconChecklist,
+        //   roles: ['admin'],
+        // },
         // {
         //   title: 'Tasks',
         //   url: '/tasks',
@@ -117,10 +119,11 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Lead Management',
+      roles: ['admin'],
       items: [
         {
           title: 'Leads By Employees',
-          icon: IconLockAccess,
+          icon: IconCircleLetterL,
           items: [
             // {
             //   title: 'Marketingperson1',
@@ -132,8 +135,25 @@ export const sidebarData: SidebarData = {
             // },
           ],
         },
+        {
+          title: 'Leads',
+          icon: IconLockAccess,
+          items: [
+            {
+              title: 'All Leads',
+              url: '/allLeads',
+              icon: IconChecklist,
+              roles: ['admin'],
+            },
+            // {
+            //   title: 'demo-employee',
+            //   url: '/employee/eYhtaZxoUaH44ceUMVGw',
+            // },
+          ],
+        },
       ],
     },
+    
     // {
     //   title: 'Other',
     //   items: [
