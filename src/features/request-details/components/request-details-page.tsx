@@ -151,37 +151,43 @@ export default function RequestDetailsPage({
                 <h3 className='mb-4 font-semibold text-muted-foreground'>
                   Attached Files
                 </h3>
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-                  {requestDetails.fileURLs?.map((url, index) => (
-                    <Dialog
-                      key={index}
-                      open={isImageOpen}
-                      onOpenChange={setIsImageOpen}
-                    >
-                      <DialogTrigger asChild>
-                        <div className='relative aspect-video w-full cursor-pointer overflow-hidden rounded-lg transition-opacity duration-300 hover:opacity-90'>
-                          <img
-                            src={url || '/placeholder.svg'}
-                            alt={
-                              requestDetails.fileNames[index] || 'Uploaded file'
-                            }
-                            className='h-full w-full object-cover'
-                          />
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent className='max-w-4xl'>
-                        <div className='relative aspect-video w-full'>
-                          <img
-                            src={url || '/placeholder.svg'}
-                            alt={
-                              requestDetails.fileNames[index] || 'Uploaded file'
-                            }
-                            className='object-contain'
-                          />
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  ))}
+                <div className='grid grid-cols-3 gap-1.5 sm:grid-cols-4 sm:gap-2 md:grid-cols-3 lg:grid-cols-4'>
+                  {requestDetails.fileURLs?.map((url, index) => {
+                    const [isOpen, setIsOpen] = useState(false)
+                    return (
+                      <Dialog
+                        key={index}
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                      >
+                        <DialogTrigger asChild>
+                          <div className='relative aspect-square w-full cursor-pointer overflow-hidden rounded-lg transition-opacity duration-300 max-md:active:opacity-90'>
+                            <img
+                              src={url || '/placeholder.svg'}
+                              alt={
+                                requestDetails.fileNames[index] ||
+                                'Uploaded file'
+                              }
+                              className='h-full w-full touch-none object-cover'
+                              style={{ transform: 'translateZ(0)' }}
+                            />
+                          </div>
+                        </DialogTrigger>
+                        <DialogContent className='h-screen max-w-[100vw] rounded-none border-none p-0 sm:max-w-[95vw] sm:rounded-lg sm:border'>
+                          <div className='flex h-full items-center justify-center bg-black/90'>
+                            <img
+                              src={url || '/placeholder.svg'}
+                              alt={
+                                requestDetails.fileNames[index] ||
+                                'Uploaded file'
+                              }
+                              className='max-h-[90vh] w-auto object-contain'
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )
+                  })}
                 </div>
                 {requestDetails.fileNames?.length > 0 && (
                   <div className='mt-4 space-y-1'>
