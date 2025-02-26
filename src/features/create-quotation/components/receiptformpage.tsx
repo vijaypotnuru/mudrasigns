@@ -14,7 +14,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { ReceiptPreviewModal } from './receipt-preview-modal'
 
-
 export default function ReceiptFormPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [customerDetails, setCustomerDetails] = useState({
@@ -78,9 +77,9 @@ export default function ReceiptFormPage() {
     <div className='container mx-auto py-8'>
       <Card className='w-full'>
         <CardHeader>
-          <CardTitle>Create Receipt</CardTitle>
+          <CardTitle>Create Quotation</CardTitle>
           <CardDescription>
-            Fill in the details to generate a receipt
+            Fill in the details to generate a quotation
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -364,7 +363,7 @@ export default function ReceiptFormPage() {
 
               <div className='flex justify-end'>
                 <Button type='submit' size='lg'>
-                  Generate Receipt
+                  Generate Quotation
                 </Button>
               </div>
             </div>

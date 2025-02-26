@@ -1,6 +1,7 @@
-'use client'
-
 import { useRef, useState } from 'react'
+import { db, storage } from '@/services/firebase'
+import { addDoc, collection } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { Loader2 } from 'lucide-react'
 // import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -43,6 +44,42 @@ export function ReceiptPreviewModal({
   const [format, setFormat] = useState<'thermal' | 'a4'>('a4')
   const printRef = useRef<HTMLDivElement>(null)
 
+  // Function to upload the invoice content and save metadata in Firestore
+  const saveInvoiceDocument = async () => {
+    if (!printRef.current) return
+
+    // Create an HTML blob of the invoice preview content
+    const invoiceHTML = `
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Invoice</title>
+        </head>
+        <body>
+          ${printRef.current.outerHTML}
+        </body>
+      </html>
+    `
+    const blob = new Blob([invoiceHTML], { type: 'text/html' })
+    const invoiceFileName = `invoice-${Date.now()}.html`
+    const storageRef = ref(storage, `invoices/${invoiceFileName}`)
+
+    // Upload to Firebase Storage
+    await uploadBytes(storageRef, blob)
+    const downloadURL = await getDownloadURL(storageRef)
+
+    // Save invoice metadata in Firestore's "all-invoices" collection
+    await addDoc(collection(db, 'all-invoices'), {
+      invoiceUrl: downloadURL,
+      createdAt: new Date(),
+      total,
+      customerDetails,
+      discountPercentage,
+      invoiceDetails,
+      cart,
+    })
+  }
+
   const handlePrint = async () => {
     if (!printRef.current) return
 
@@ -76,23 +113,30 @@ export function ReceiptPreviewModal({
         </html>
       `)
 
-      // Wait for images to load
+      // Wait for images (or other assets) to load
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Print and close
+      // Print and close the print window
       printWindow.document.close()
       printWindow.focus()
       printWindow.print()
       printWindow.close()
 
-    //   toast.success('Receipt printed successfully')
+      // Optionally, show a success toast
+      // toast.success('Receipt printed successfully')
+
+      // Save the invoice document in Firebase Storage and Firestore
+      await saveInvoiceDocument()
     } catch (error) {
       console.error('Printing failed:', error)
-    //   toast.error('Failed to print receipt')
+      // Optionally, show an error toast
+      // toast.error('Failed to print receipt')
     } finally {
       setIsPrinting(false)
     }
   }
+  
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

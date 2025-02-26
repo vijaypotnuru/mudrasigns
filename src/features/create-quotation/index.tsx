@@ -12,7 +12,7 @@ import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
 import { tasks } from './data/tasks'
 
-export default function CreateInvoice() {
+export default function CreateQuotation() {
   return (
     <TasksProvider>
       <Header fixed>

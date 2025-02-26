@@ -156,18 +156,18 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Invoice Management',
+      title: 'Quotation Management',
       roles: ['admin'],
       items: [
         {
-          title: 'Create Invoice',
-          url: '/create-invoice',
+          title: 'Create Quotation',
+          url: '/create-quotation',
           icon: IconReceiptRupee,
           roles: ['admin'],
         },
         {
-          title: 'All Invoices',
-          url: '/all-invoices',
+          title: 'All Quotations',
+          url: '/all-quotations',
           icon: IconInvoice,
           roles: ['admin'],
         },
