@@ -76,6 +76,9 @@ const AuthenticatedAllLeadsIndexLazyImport = createFileRoute(
 const AuthenticatedAllQuotationsIndexLazyImport = createFileRoute(
   '/_authenticated/all-quotations/',
 )()
+const AuthenticatedAllInvoicesIndexLazyImport = createFileRoute(
+  '/_authenticated/all-invoices/',
+)()
 const AuthenticatedSettingsNotificationsLazyImport = createFileRoute(
   '/_authenticated/settings/notifications',
 )()
@@ -342,6 +345,17 @@ const AuthenticatedAllQuotationsIndexLazyRoute =
     ),
   )
 
+const AuthenticatedAllInvoicesIndexLazyRoute =
+  AuthenticatedAllInvoicesIndexLazyImport.update({
+    id: '/all-invoices/',
+    path: '/all-invoices/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/all-invoices/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 const AuthenticatedSettingsNotificationsLazyRoute =
   AuthenticatedSettingsNotificationsLazyImport.update({
     id: '/notifications',
@@ -538,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsLazyImport
       parentRoute: typeof AuthenticatedSettingsRouteLazyImport
     }
+    '/_authenticated/all-invoices/': {
+      id: '/_authenticated/all-invoices/'
+      path: '/all-invoices'
+      fullPath: '/all-invoices'
+      preLoaderRoute: typeof AuthenticatedAllInvoicesIndexLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/all-quotations/': {
       id: '/_authenticated/all-quotations/'
       path: '/all-quotations'
@@ -684,6 +705,7 @@ const AuthenticatedSettingsRouteLazyRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteLazyRoute: typeof AuthenticatedSettingsRouteLazyRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAllInvoicesIndexLazyRoute: typeof AuthenticatedAllInvoicesIndexLazyRoute
   AuthenticatedAllQuotationsIndexLazyRoute: typeof AuthenticatedAllQuotationsIndexLazyRoute
   AuthenticatedAllLeadsIndexLazyRoute: typeof AuthenticatedAllLeadsIndexLazyRoute
   AuthenticatedAllrequestsIndexLazyRoute: typeof AuthenticatedAllrequestsIndexLazyRoute
@@ -705,6 +727,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteLazyRoute:
     AuthenticatedSettingsRouteLazyRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAllInvoicesIndexLazyRoute:
+    AuthenticatedAllInvoicesIndexLazyRoute,
   AuthenticatedAllQuotationsIndexLazyRoute:
     AuthenticatedAllQuotationsIndexLazyRoute,
   AuthenticatedAllLeadsIndexLazyRoute: AuthenticatedAllLeadsIndexLazyRoute,
@@ -751,6 +775,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/all-invoices': typeof AuthenticatedAllInvoicesIndexLazyRoute
   '/all-quotations': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/allLeads': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
@@ -785,6 +810,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/all-invoices': typeof AuthenticatedAllInvoicesIndexLazyRoute
   '/all-quotations': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/allLeads': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
@@ -823,6 +849,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/_authenticated/all-invoices/': typeof AuthenticatedAllInvoicesIndexLazyRoute
   '/_authenticated/all-quotations/': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/_authenticated/allLeads/': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/_authenticated/allrequests/': typeof AuthenticatedAllrequestsIndexLazyRoute
@@ -861,6 +888,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/all-invoices'
     | '/all-quotations'
     | '/allLeads'
     | '/allrequests'
@@ -894,6 +922,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/all-invoices'
     | '/all-quotations'
     | '/allLeads'
     | '/allrequests'
@@ -930,6 +959,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/all-invoices/'
     | '/_authenticated/all-quotations/'
     | '/_authenticated/allLeads/'
     | '/_authenticated/allrequests/'
@@ -1008,6 +1038,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/settings",
         "/_authenticated/",
+        "/_authenticated/all-invoices/",
         "/_authenticated/all-quotations/",
         "/_authenticated/allLeads/",
         "/_authenticated/allrequests/",
@@ -1088,6 +1119,10 @@ export const routeTree = rootRoute
     "/_authenticated/settings/notifications": {
       "filePath": "_authenticated/settings/notifications.lazy.tsx",
       "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/all-invoices/": {
+      "filePath": "_authenticated/all-invoices/index.lazy.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/all-quotations/": {
       "filePath": "_authenticated/all-quotations/index.lazy.tsx",
