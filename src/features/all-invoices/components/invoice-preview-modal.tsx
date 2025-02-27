@@ -10,24 +10,23 @@ import {
 } from '@/components/ui/dialog'
 import { ReceiptA4 } from '@/features/create-quotation/components/receipt-a4'
 import { useToast } from '@/hooks/use-toast'
-import { EditQuotationModal } from './edit-quotation-modal'
+import { EditInvoiceModal } from './edit-invoice-modal'
 
-
-interface QuotationPreviewModalProps {
+interface InvoicePreviewModalProps {
   isOpen: boolean
   onClose: () => void
-  quotationDetails: any
-  quotationId: string
-  onQuotationUpdated?: () => void
+  invoiceDetails: any
+  invoiceId: string
+  onInvoiceUpdated?: () => void
 }
 
-export function QuotationPreviewModal({
+export function InvoicePreviewModal({
   isOpen,
   onClose,
-  quotationDetails,
-  quotationId,
-  onQuotationUpdated,
-}: QuotationPreviewModalProps) {
+  invoiceDetails,
+  invoiceId,
+  onInvoiceUpdated,
+}: InvoicePreviewModalProps) {
   const printRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -75,7 +74,7 @@ export function QuotationPreviewModal({
       // Show success toast
       toast({
         title: "Success",
-        description: "Quotation printed successfully",
+        description: "Invoice printed successfully",
       })
     } catch (error) {
       console.error('Printing failed:', error)
@@ -83,26 +82,24 @@ export function QuotationPreviewModal({
       // Show error toast
       toast({
         title: "Error",
-        description: "Failed to print quotation",
+        description: "Failed to print invoice",
         variant: "destructive",
       })
     }
   }
 
-  // Handle successful quotation update
-  const handleQuotationUpdated = () => {
-    // Close the edit modal
+  const handleEditComplete = () => {
     setIsEditModalOpen(false)
     
-    // Call the parent's callback if provided
-    if (onQuotationUpdated) {
-      onQuotationUpdated()
+    // Call the parent's update handler if provided
+    if (onInvoiceUpdated) {
+      onInvoiceUpdated()
     }
     
     // Show success toast
     toast({
       title: "Success",
-      description: "Quotation updated successfully",
+      description: "Invoice updated successfully",
     })
   }
 
@@ -111,7 +108,7 @@ export function QuotationPreviewModal({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="flex max-h-[95vh] max-w-[1400px] flex-col p-0">
           <DialogHeader className="px-6 py-4 border-b">
-            <DialogTitle>Quotation Preview</DialogTitle>
+            <DialogTitle>Invoice Preview</DialogTitle>
           </DialogHeader>
 
           <div className="flex-1 overflow-y-auto p-6">
@@ -119,45 +116,45 @@ export function QuotationPreviewModal({
               <div className="origin-top scale-[0.85] transform">
                 <ReceiptA4
                   ref={printRef}
-                  cart={quotationDetails.cart || []}
-                  total={quotationDetails.total || 0}
-                  customerDetails={quotationDetails.customerDetails || {}}
-                  discountPercentage={quotationDetails.discountPercentage || 0}
-                  quotationDetails={quotationDetails.quotationDetails || {}}
-                  isInvoice={false}
+                  cart={invoiceDetails.cart || []}
+                  total={invoiceDetails.total || 0}
+                  customerDetails={invoiceDetails.customerDetails || {}}
+                  discountPercentage={invoiceDetails.discountPercentage || 0}
+                  quotationDetails={invoiceDetails.quotationDetails || {}}
+                  isInvoice={true}
                 />
               </div>
             </div>
           </div>
 
           <DialogFooter className="border-t px-6 py-4">
-            <Button variant="outline" onClick={onClose}>
-              Close
-            </Button>
             <Button 
               variant="outline" 
-              onClick={() => setIsEditModalOpen(true)} 
+              onClick={() => setIsEditModalOpen(true)}
               className="flex items-center gap-2"
             >
               <Edit className="h-4 w-4" />
-              Edit Quotation
+              Edit
             </Button>
-            <Button onClick={handlePrint} className="flex items-center gap-2">
+            <Button 
+              onClick={handlePrint}
+              className="flex items-center gap-2"
+            >
               <Printer className="h-4 w-4" />
-              Print Quotation
+              Print
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Edit Quotation Modal */}
+      {/* Edit Invoice Modal */}
       {isEditModalOpen && (
-        <EditQuotationModal
+        <EditInvoiceModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          quotationDetails={quotationDetails}
-          quotationId={quotationId}
-          onUpdated={handleQuotationUpdated}
+          invoiceDetails={invoiceDetails}
+          invoiceId={invoiceId}
+          onUpdated={handleEditComplete}
         />
       )}
     </>

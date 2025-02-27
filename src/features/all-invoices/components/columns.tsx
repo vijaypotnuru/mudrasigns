@@ -12,7 +12,7 @@ import { Task } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 import { StatusUpdateDialog } from './status-update-dialog'
-import { QuotationActions } from './quotation-actions'
+import { InvoiceActions } from './invoice-actions'
 
 export const columns: ColumnDef<Task>[] = [
   // {
@@ -146,7 +146,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => <QuotationActions quotationId={row.original.id} />,
+    cell: ({ row }) => <InvoiceActions invoiceId={row.original.id} />,
   },
   // {
   //   accessorKey: 'address',

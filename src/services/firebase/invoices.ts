@@ -66,3 +66,14 @@ export const updateQuotation = async (quotationId: string, quotationData: any) =
     throw error
   }
 }
+
+export const updateInvoice = async (invoiceId: string, invoiceData: any) => {
+  try {
+    const docRef = doc(db, 'mudra_sign_all_invoices', invoiceId)
+    await updateDoc(docRef, invoiceData)
+    return { id: invoiceId, ...invoiceData }
+  } catch (error) {
+    console.error('Error updating invoice:', error)
+    throw error
+  }
+}
