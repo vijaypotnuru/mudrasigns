@@ -35,8 +35,8 @@ export default function ReceiptFormPage() {
     },
   ])
 
-  const [invoiceDetails, setInvoiceDetails] = useState({
-    invoice_number: `INV-${new Date().getTime().toString().slice(-6)}`,
+  const [quotationDetails, setQuotationDetails] = useState({
+    quotation_number: `QTN-${new Date().getTime().toString().slice(-6)}`,
     order_date: new Date().toLocaleDateString('en-IN'),
     order_time: new Date().toLocaleTimeString('en-IN'),
   })
@@ -79,7 +79,7 @@ export default function ReceiptFormPage() {
         <CardHeader>
           <CardTitle>Create Quotation</CardTitle>
           <CardDescription>
-            Fill in the details to generate a quotation
+            Fill in the details to generate a new quotation.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -122,19 +122,19 @@ export default function ReceiptFormPage() {
 
               <Separator />
 
-              {/* Invoice Details Section */}
+              {/* Quotation Details Section */}
               <div>
-                <h3 className='text-lg font-medium'>Invoice Details</h3>
+                <h3 className='text-lg font-medium'>Quotation Details</h3>
                 <div className='mt-3 grid grid-cols-1 gap-4 md:grid-cols-3'>
                   <div className='space-y-2'>
-                    <Label htmlFor='invoiceNumber'>Invoice Number</Label>
+                    <Label htmlFor='quotationNumber'>Quotation Number</Label>
                     <Input
-                      id='invoiceNumber'
-                      value={invoiceDetails.invoice_number}
+                      id='quotationNumber'
+                      value={quotationDetails.quotation_number}
                       onChange={(e) =>
-                        setInvoiceDetails({
-                          ...invoiceDetails,
-                          invoice_number: e.target.value,
+                        setQuotationDetails({
+                          ...quotationDetails,
+                          quotation_number: e.target.value,
                         })
                       }
                     />
@@ -143,10 +143,10 @@ export default function ReceiptFormPage() {
                     <Label htmlFor='orderDate'>Date</Label>
                     <Input
                       id='orderDate'
-                      value={invoiceDetails.order_date}
+                      value={quotationDetails.order_date}
                       onChange={(e) =>
-                        setInvoiceDetails({
-                          ...invoiceDetails,
+                        setQuotationDetails({
+                          ...quotationDetails,
                           order_date: e.target.value,
                         })
                       }
@@ -156,10 +156,10 @@ export default function ReceiptFormPage() {
                     <Label htmlFor='orderTime'>Time</Label>
                     <Input
                       id='orderTime'
-                      value={invoiceDetails.order_time}
+                      value={quotationDetails.order_time}
                       onChange={(e) =>
-                        setInvoiceDetails({
-                          ...invoiceDetails,
+                        setQuotationDetails({
+                          ...quotationDetails,
                           order_time: e.target.value,
                         })
                       }
@@ -379,7 +379,7 @@ export default function ReceiptFormPage() {
           total={total}
           customerDetails={customerDetails}
           discountPercentage={discountPercentage}
-          invoiceDetails={invoiceDetails}
+          quotationDetails={quotationDetails}
         />
       )}
     </div>

@@ -24,8 +24,8 @@ interface ReceiptPreviewModalProps {
     customerMobile: string
   }
   discountPercentage: number
-  invoiceDetails?: {
-    invoice_number: string
+  quotationDetails?: {
+    quotation_number: string
     order_date: string
     order_time: string
   }
@@ -38,44 +38,47 @@ export function ReceiptPreviewModal({
   total,
   customerDetails,
   discountPercentage,
-  invoiceDetails,
+  quotationDetails,
 }: ReceiptPreviewModalProps) {
   const [isPrinting, setIsPrinting] = useState(false)
   const [format, setFormat] = useState<'thermal' | 'a4'>('a4')
   const printRef = useRef<HTMLDivElement>(null)
 
-  // Function to upload the invoice content and save metadata in Firestore
-  const saveInvoiceDocument = async () => {
+  // Function to upload the quotation content and save metadata in Firestore
+  const saveQuotationDocument = async () => {
     if (!printRef.current) return
 
-    // Create an HTML blob of the invoice preview content
-    const invoiceHTML = `
+    // Create an HTML blob of the quotation preview content
+    const quotationHTML = `
+      <!DOCTYPE html>
       <html>
         <head>
-          <meta charset="utf-8" />
-          <title>Invoice</title>
+          <title>Quotation</title>
         </head>
         <body>
           ${printRef.current.outerHTML}
         </body>
       </html>
     `
-    const blob = new Blob([invoiceHTML], { type: 'text/html' })
-    const invoiceFileName = `invoice-${Date.now()}.html`
-    const storageRef = ref(storage, `invoices/${invoiceFileName}`)
+    const blob = new Blob([quotationHTML], { type: 'text/html' })
+    const quotationFileName = `mudra_sign_quotation-${Date.now()}.html`
+    const storageRef = ref(
+      storage,
+      `mudra_sign_quotations/${quotationFileName}`
+    )
 
     // Upload to Firebase Storage
     await uploadBytes(storageRef, blob)
     const downloadURL = await getDownloadURL(storageRef)
 
-    // Save invoice metadata in Firestore's "all-invoices" collection
-    await addDoc(collection(db, 'all-invoices'), {
-      invoiceUrl: downloadURL,
+    // Save quotation metadata in Firestore's "all-quotations" collection
+    await addDoc(collection(db, 'mudra_sign_all_quotations'), {
+      quotationUrl: downloadURL,
       createdAt: Date.now(),
       total,
       customerDetails,
       discountPercentage,
-      invoiceDetails,
+      quotationDetails,
       cart,
     })
   }
@@ -125,8 +128,8 @@ export function ReceiptPreviewModal({
       // Optionally, show a success toast
       // toast.success('Receipt printed successfully')
 
-      // Save the invoice document in Firebase Storage and Firestore
-      await saveInvoiceDocument()
+      // Save the quotation document in Firebase Storage and Firestore
+      await saveQuotationDocument()
     } catch (error) {
       console.error('Printing failed:', error)
       // Optionally, show an error toast
@@ -166,7 +169,7 @@ export function ReceiptPreviewModal({
                 : 'border-[hsl(var(--billing-card-border))]'
             }
           >
-            A4 Invoice
+            A4 Quotation
           </Button>
         </div>
 
@@ -182,7 +185,7 @@ export function ReceiptPreviewModal({
                   total={total}
                   customerDetails={customerDetails}
                   discountPercentage={discountPercentage}
-                  invoiceDetails={invoiceDetails}
+                  quotationDetails={quotationDetails}
                 />
               </div>
             )}

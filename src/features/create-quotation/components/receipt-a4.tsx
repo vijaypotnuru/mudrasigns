@@ -9,8 +9,8 @@ interface ReceiptA4Props {
     customerMobile: string
   }
   discountPercentage?: number
-  invoiceDetails?: {
-    invoice_number: string
+  quotationDetails?: {
+    quotation_number: string
     order_date: string
     order_time: string
   }
@@ -26,7 +26,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         customerMobile: '',
       },
       discountPercentage = 0,
-      invoiceDetails,
+      quotationDetails,
     },
     ref
   ) => {
@@ -146,7 +146,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         fontStyle: 'italic',
         marginBottom: '5px',
       },
-      invoiceInfo: {
+      quotationInfo: {
         width: '250px',
       },
       infoTable: {
@@ -338,22 +338,22 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                 <div>State Code: 37</div>
               </div>
             </div>
-            <div style={styles.invoiceInfo}>
+            <div style={styles.quotationInfo}>
               <table style={styles.infoTable}>
                 <tbody>
                   <tr>
-                    <td>Invoice No</td>
+                    <td>Quotation No</td>
                     <td>
                       :{' '}
-                      {invoiceDetails?.invoice_number ||
-                        `INV-${new Date().getTime().toString().slice(-6)}`}
+                      {quotationDetails?.quotation_number ||
+                        `QUO-${new Date().getTime().toString().slice(-6)}`}
                     </td>
                   </tr>
                   <tr>
                     <td>Date</td>
                     <td>
                       :{' '}
-                      {invoiceDetails?.order_date ||
+                      {quotationDetails?.order_date ||
                         new Date().toLocaleDateString('en-IN')}
                     </td>
                   </tr>
@@ -361,7 +361,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                     <td>Time</td>
                     <td>
                       :{' '}
-                      {invoiceDetails?.order_time ||
+                      {quotationDetails?.order_time ||
                         new Date().toLocaleTimeString('en-IN')}
                     </td>
                   </tr>
@@ -462,7 +462,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             {numberToWords(Math.round(amountAfterDiscount))} Only.
           </div>
           <div style={styles.taxSummary}>
-            Invoice Total: ₹{amountAfterDiscount.toFixed(2)}
+            Quotation Total: ₹{amountAfterDiscount.toFixed(2)}
           </div>
         </div>
 
@@ -474,7 +474,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             <div>
               <div>Outstanding Details</div>
               <div>Previous Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Current Invoice: ₹{amountAfterDiscount.toFixed(2)}</div>
+              <div>Current Quotation: ₹{amountAfterDiscount.toFixed(2)}</div>
               <div>Total Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
             </div>
             <div>
