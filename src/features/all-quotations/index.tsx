@@ -1,4 +1,4 @@
-import { getAllQuotations } from '@/services/firebase/invoices'
+import { getAllQuotations, getQuotationById } from '@/services/firebase/invoices'
 import { useQueryData } from '@/hooks/use-query-data'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -16,6 +16,12 @@ export default function AllQuotations() {
     getAllQuotations
   )
   console.log('allQuotations', allQuotations)
+  // const { data: quotationDetails, isLoading: quotationDetailsLoading } =
+  //   useQueryData(
+  //     ['quotations-details', 'duwVo90gNShO87zQHhlk'],
+  //     () => getQuotationById('duwVo90gNShO87zQHhlk')
+  //   )
+  // console.log('quotationDetails', quotationDetails)
   return (
     <TasksProvider>
       <Header fixed>

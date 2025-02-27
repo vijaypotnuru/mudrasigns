@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, addDoc, updateDoc } from 'firebase/firestore'
 import { db } from '.'
 
 export const getAllQuotations = async () => {
@@ -21,4 +21,25 @@ export const getQuotationById = async (quotationId: string) => {
   const docRef = doc(db, 'mudra_sign_all_quotations', quotationId)
   const docSnap = await getDoc(docRef)
   return docSnap.data()
+}
+
+export const createInvoice = async (invoiceData: any) => {
+  try {
+    const docRef = await addDoc(collection(db, 'mudra_sign_all_invoices'), invoiceData)
+    return { id: docRef.id, ...invoiceData }
+  } catch (error) {
+    console.error('Error creating invoice:', error)
+    throw error
+  }
+}
+
+export const updateQuotation = async (quotationId: string, quotationData: any) => {
+  try {
+    const docRef = doc(db, 'mudra_sign_all_quotations', quotationId)
+    await updateDoc(docRef, quotationData)
+    return { id: quotationId, ...quotationData }
+  } catch (error) {
+    console.error('Error updating quotation:', error)
+    throw error
+  }
 }

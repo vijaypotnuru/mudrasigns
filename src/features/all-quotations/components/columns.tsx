@@ -12,6 +12,7 @@ import { Task } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 import { StatusUpdateDialog } from './status-update-dialog'
+import { QuotationActions } from './quotation-actions'
 
 export const columns: ColumnDef<Task>[] = [
   // {
@@ -136,13 +137,16 @@ export const columns: ColumnDef<Task>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className='flex space-x-2'>
-          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('discountPercentage')}
-          </span>
+        <div className='flex items-center'>
+          <span>{row.getValue('discountPercentage')}%</span>
         </div>
       )
     },
+  },
+  {
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => <QuotationActions quotationId={row.original.id} />,
   },
   // {
   //   accessorKey: 'address',

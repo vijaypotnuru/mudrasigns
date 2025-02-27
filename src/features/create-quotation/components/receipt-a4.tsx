@@ -14,6 +14,7 @@ interface ReceiptA4Props {
     order_date: string
     order_time: string
   }
+  isInvoice?: boolean
 }
 
 export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
@@ -27,6 +28,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
       },
       discountPercentage = 0,
       quotationDetails,
+      isInvoice = false,
     },
     ref
   ) => {
@@ -287,7 +289,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         <div style={styles.header}>
           <div style={styles.headerTop}>
             <div style={{ width: '200px' }}></div>
-            <div style={styles.gstTitle}>GST INVOICE</div>
+            <div style={styles.gstTitle}>{isInvoice ? 'TAX INVOICE' : 'QUOTATION'}</div>
             <div style={styles.originalCopy}>ORIGINAL FOR RECIPIENT</div>
           </div>
           <div style={styles.companyName}>
