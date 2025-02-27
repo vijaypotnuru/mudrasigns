@@ -30,6 +30,7 @@ interface ReceiptPreviewModalProps {
     order_date: string
     order_time: string
   }
+  resetForm?: () => void
 }
 
 export function ReceiptPreviewModal({
@@ -40,9 +41,9 @@ export function ReceiptPreviewModal({
   customerDetails,
   discountPercentage,
   quotationDetails,
+  resetForm,
 }: ReceiptPreviewModalProps) {
   const [isPrinting, setIsPrinting] = useState(false)
-  const [format, setFormat] = useState<'thermal' | 'a4'>('a4')
   const printRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -94,6 +95,11 @@ export function ReceiptPreviewModal({
         description: 'Quotation created and saved successfully',
       });
       
+      // Reset the form if resetForm function is provided
+      if (resetForm) {
+        resetForm();
+      }
+      
       // Close the modal
       onClose();
     },
@@ -132,7 +138,7 @@ export function ReceiptPreviewModal({
           <head>
             <style>
               @page {
-                size: ${format === 'thermal' ? '80mm' : 'A4'} auto;
+                size: A4 auto;
                 margin: 0;
               }
               body {
@@ -155,9 +161,6 @@ export function ReceiptPreviewModal({
       printWindow.focus()
       printWindow.print()
       printWindow.close()
-
-      // Save the quotation document
-      await saveQuotationDocument()
     } catch (error) {
       console.error('Printing failed:', error)
     } finally {
@@ -170,57 +173,42 @@ export function ReceiptPreviewModal({
       <DialogContent className='flex max-h-[95vh] max-w-[1400px] flex-col border-[hsl(var(--billing-card-border))] bg-[hsl(var(--billing-card-bg))] p-0'>
         <DialogHeader className='border-b border-[hsl(var(--billing-card-border))] px-6 py-4'>
           <DialogTitle className='text-[hsl(var(--billing-text-primary))]'>
-            Receipt Preview
+            Quotation Preview
           </DialogTitle>
         </DialogHeader>
 
-        <div className='flex items-center justify-center gap-4 border-b border-[hsl(var(--billing-card-border))] py-4'>
-          <Button
-            variant={format === 'thermal' ? 'default' : 'outline'}
-            onClick={() => setFormat('thermal')}
-            className={
-              format === 'thermal'
-                ? 'bg-[hsl(var(--billing-highlight))]'
-                : 'border-[hsl(var(--billing-card-border))]'
-            }
-          >
-            Thermal Receipt
-          </Button>
-          <Button
-            variant={format === 'a4' ? 'default' : 'outline'}
-            onClick={() => setFormat('a4')}
-            className={
-              format === 'a4'
-                ? 'bg-[hsl(var(--billing-highlight))]'
-                : 'border-[hsl(var(--billing-card-border))]'
-            }
-          >
-            A4 Quotation
-          </Button>
-        </div>
-
         <div className='flex-1 overflow-y-auto p-6'>
           <div className='flex justify-center'>
-            {format === 'thermal' ? (
-              <div>Thermal Receipt Format</div>
-            ) : (
-              <div className='origin-top scale-[0.85] transform'>
-                <ReceiptA4
-                  ref={printRef}
-                  cart={cart}
-                  total={total}
-                  customerDetails={customerDetails}
-                  discountPercentage={discountPercentage}
-                  quotationDetails={quotationDetails}
-                />
-              </div>
-            )}
+            <div className='origin-top scale-[0.85] transform'>
+              <ReceiptA4
+                ref={printRef}
+                cart={cart}
+                total={total}
+                customerDetails={customerDetails}
+                discountPercentage={discountPercentage}
+                quotationDetails={quotationDetails}
+              />
+            </div>
           </div>
         </div>
 
         <DialogFooter className='border-t px-6 py-4'>
           <Button variant='outline' onClick={onClose}>
             Cancel
+          </Button>
+          <Button 
+            onClick={saveQuotationDocument} 
+            disabled={createQuotationMutation.isPending}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            {createQuotationMutation.isPending ? (
+              <>
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                Saving...
+              </>
+            ) : (
+              'Save Quotation'
+            )}
           </Button>
           <Button onClick={handlePrint} disabled={isPrinting}>
             {isPrinting ? (

@@ -96,6 +96,38 @@ export default function ReceiptFormPage() {
     setIsPreviewOpen(true)
   }
 
+  // Function to reset the form to initial values
+  const resetForm = () => {
+    // Reset customer details
+    setCustomerDetails({
+      customerName: '',
+      customerMobile: '',
+    });
+
+    // Reset discount
+    setDiscountPercentage(0);
+
+    // Reset cart to a single empty item
+    setCart([
+      {
+        name: '',
+        brand: '',
+        unit: '',
+        quantity: 1,
+        price: 0,
+        sgst: 6,
+        cgst: 6,
+      },
+    ]);
+
+    // Generate a new quotation number with the current timestamp
+    setQuotationDetails({
+      quotation_number: `QTN-${Date.now().toString().slice(-6)}`,
+      order_date: new Date().toLocaleDateString('en-IN'),
+      order_time: new Date().toLocaleTimeString('en-IN'),
+    });
+  };
+
   return (
     <div className='container mx-auto py-8'>
       <Card className='w-full'>
@@ -403,6 +435,7 @@ export default function ReceiptFormPage() {
           customerDetails={customerDetails}
           discountPercentage={discountPercentage}
           quotationDetails={quotationDetails}
+          resetForm={resetForm}
         />
       )}
     </div>
