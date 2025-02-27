@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Eye } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { getInvoiceById } from '@/services/firebase/invoices'
-import { useQueryData } from '@/hooks/use-query-data'
 import { InvoicePreviewModal } from './invoice-preview-modal'
 
 interface InvoiceActionsProps {
@@ -12,10 +12,10 @@ interface InvoiceActionsProps {
 export function InvoiceActions({ invoiceId }: InvoiceActionsProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
-  const { data: invoiceDetails, isLoading, refetch } = useQueryData(
-    ['invoice-details', invoiceId],
-    () => getInvoiceById(invoiceId)
-  )
+  const { data: invoiceDetails, isLoading, refetch } = useQuery({
+    queryKey: ['invoice-details', invoiceId],
+    queryFn: () => getInvoiceById(invoiceId)
+  })
 
   // Function to refresh invoice data
   const handleInvoiceUpdated = () => {

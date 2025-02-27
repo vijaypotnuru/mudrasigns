@@ -3,7 +3,8 @@ import { db, storage } from '@/services/firebase'
 import { addDoc, collection } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { Loader2 } from 'lucide-react'
-// import { toast } from 'sonner'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -43,44 +44,72 @@ export function ReceiptPreviewModal({
   const [isPrinting, setIsPrinting] = useState(false)
   const [format, setFormat] = useState<'thermal' | 'a4'>('a4')
   const printRef = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
 
-  // Function to upload the quotation content and save metadata in Firestore
-  const saveQuotationDocument = async () => {
-    if (!printRef.current) return
+  // Create quotation mutation
+  const createQuotationMutation = useMutation({
+    mutationFn: async () => {
+      if (!printRef.current) return null;
 
-    // Create an HTML blob of the quotation preview content
-    const quotationHTML = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Quotation</title>
-        </head>
-        <body>
-          ${printRef.current.outerHTML}
-        </body>
-      </html>
-    `
-    const blob = new Blob([quotationHTML], { type: 'text/html' })
-    const quotationFileName = `mudra_sign_quotation-${Date.now()}.html`
-    const storageRef = ref(
-      storage,
-      `mudra_sign_quotations/${quotationFileName}`
-    )
+      // Create an HTML blob of the quotation preview content
+      const htmlContent = printRef.current.outerHTML;
+      
+      // Create a unique filename for storage
+      const timestamp = Date.now();
+      const filename = `quotations/${customerDetails.customerName.replace(/\s+/g, '_')}_${timestamp}.html`;
+      
+      // Upload HTML to Firebase Storage
+      const storageRef = ref(storage, filename);
+      const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+      const uploadTask = await uploadBytes(storageRef, htmlBlob);
+      
+      // Get download URL for the uploaded file
+      const downloadURL = await getDownloadURL(uploadTask.ref);
+      
+      // Add metadata to Firestore
+      const quotationData = {
+        customerDetails,
+        discountPercentage,
+        total: total - (total * discountPercentage) / 100,
+        cart,
+        quotationDetails,
+        fileURL: downloadURL,
+        createdAt: new Date(),
+      };
+      
+      const docRef = await addDoc(collection(db, 'mudra_sign_all_quotations'), quotationData);
+      
+      return { id: docRef.id, ...quotationData };
+    },
+    onSuccess: () => {
+      // Invalidate the all-quotations query to refresh the quotations list
+      queryClient.invalidateQueries({ queryKey: ['all-quotations'] });
+      
+      // Show success toast
+      toast({
+        title: 'Success',
+        description: 'Quotation created and saved successfully',
+      });
+      
+      // Close the modal
+      onClose();
+    },
+    onError: (error) => {
+      console.error('Error creating quotation:', error);
+      
+      // Show error toast
+      toast({
+        title: 'Error',
+        description: 'Failed to create quotation',
+        variant: 'destructive',
+      });
+    }
+  });
 
-    // Upload to Firebase Storage
-    await uploadBytes(storageRef, blob)
-    const downloadURL = await getDownloadURL(storageRef)
-
-    // Save quotation metadata in Firestore's "all-quotations" collection
-    await addDoc(collection(db, 'mudra_sign_all_quotations'), {
-      quotationUrl: downloadURL,
-      createdAt: Date.now(),
-      total,
-      customerDetails,
-      discountPercentage,
-      quotationDetails,
-      cart,
-    })
+  // Function to save the quotation document
+  const saveQuotationDocument = () => {
+    createQuotationMutation.mutate();
   }
 
   const handlePrint = async () => {
@@ -125,15 +154,10 @@ export function ReceiptPreviewModal({
       printWindow.print()
       printWindow.close()
 
-      // Optionally, show a success toast
-      // toast.success('Receipt printed successfully')
-
-      // Save the quotation document in Firebase Storage and Firestore
+      // Save the quotation document
       await saveQuotationDocument()
     } catch (error) {
       console.error('Printing failed:', error)
-      // Optionally, show an error toast
-      // toast.error('Failed to print receipt')
     } finally {
       setIsPrinting(false)
     }

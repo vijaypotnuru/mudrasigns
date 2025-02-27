@@ -1,5 +1,5 @@
 import { getAllQuotations, getQuotationById } from '@/services/firebase/invoices'
-import { useQueryData } from '@/hooks/use-query-data'
+import { useQuery } from '@tanstack/react-query'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -12,16 +12,16 @@ import TasksProvider from './context/tasks-context'
 import { getAllInvoices } from '@/services/firebase/invoices'
 
 export default function AllInvoices() {
-  const { data: allInvoices, isLoading } = useQueryData(
-    ['all-invoices'],
-    getAllInvoices
-  )
+  const { data: allInvoices, isLoading } = useQuery({
+    queryKey: ['all-invoices'],
+    queryFn: getAllInvoices
+  })
   console.log('allInvoices', allInvoices)
   // const { data: quotationDetails, isLoading: quotationDetailsLoading } =
-  //   useQueryData(
-  //     ['quotations-details', 'duwVo90gNShO87zQHhlk'],
-  //     () => getQuotationById('duwVo90gNShO87zQHhlk')
-  //   )
+  //   useQuery({
+  //     queryKey: ['quotations-details', 'duwVo90gNShO87zQHhlk'],
+  //     queryFn: () => getQuotationById('duwVo90gNShO87zQHhlk')
+  //   })
   // console.log('quotationDetails', quotationDetails)
   return (
     <TasksProvider>

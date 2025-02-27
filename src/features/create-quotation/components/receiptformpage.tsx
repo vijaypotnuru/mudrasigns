@@ -1,6 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { PlusCircle, Trash2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -15,6 +16,7 @@ import { Separator } from '@/components/ui/separator'
 import { ReceiptPreviewModal } from './receipt-preview-modal'
 
 export default function ReceiptFormPage() {
+  const { toast } = useToast()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [customerDetails, setCustomerDetails] = useState({
     customerName: '',
@@ -70,6 +72,27 @@ export default function ReceiptFormPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Form validation
+    if (!customerDetails.customerName || !customerDetails.customerMobile) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all customer details',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (cart.some(item => !item.name || item.quantity <= 0 || item.price <= 0)) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all item details correctly',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Open the preview modal
     setIsPreviewOpen(true)
   }
 

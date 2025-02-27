@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Loader2, PlusCircle, Trash2 } from 'lucide-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -31,11 +32,9 @@ export function EditQuotationModal({
   onUpdated,
 }: EditQuotationModalProps) {
   const { toast } = useToast()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [customerDetails, setCustomerDetails] = useState({
-    customerName: '',
-    customerMobile: '',
-  })
+  const queryClient = useQueryClient()
+  const [customerName, setCustomerName] = useState('')
+  const [customerMobile, setCustomerMobile] = useState('')
   const [discountPercentage, setDiscountPercentage] = useState(0)
   const [cart, setCart] = useState<any[]>([])
   const [quotationInfo, setQuotationInfo] = useState({
@@ -47,10 +46,8 @@ export function EditQuotationModal({
   // Initialize form with existing quotation data
   useEffect(() => {
     if (quotationDetails) {
-      setCustomerDetails(quotationDetails.customerDetails || {
-        customerName: '',
-        customerMobile: '',
-      })
+      setCustomerName(quotationDetails.customerDetails.customerName || '')
+      setCustomerMobile(quotationDetails.customerDetails.customerMobile || '')
       setDiscountPercentage(quotationDetails.discountPercentage || 0)
       setCart(quotationDetails.cart || [])
       setQuotationInfo(quotationDetails.quotationDetails || {
@@ -61,8 +58,97 @@ export function EditQuotationModal({
     }
   }, [quotationDetails])
 
-  // Calculate total
-  const total = cart.reduce((sum, item) => sum + item.quantity * item.price, 0)
+  const calculateTotal = () => {
+    const subtotal = cart.reduce(
+      (sum, item) => sum + item.quantity * item.price,
+      0
+    )
+    const discount = (subtotal * discountPercentage) / 100
+    return subtotal - discount
+  }
+
+  // Update quotation mutation
+  const updateQuotationMutation = useMutation({
+    mutationFn: async (updatedQuotationData: any) => {
+      return await updateQuotation(quotationId, updatedQuotationData);
+    },
+    onSuccess: () => {
+      // Invalidate the all-quotations query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['all-quotations'] });
+      
+      // Invalidate the specific quotation query to refresh its details
+      queryClient.invalidateQueries({ queryKey: ['quotation-details', quotationId] });
+      
+      // Show success toast
+      toast({
+        title: 'Success',
+        description: 'Quotation updated successfully',
+      });
+      
+      // Close modal and notify parent component
+      if (onUpdated) {
+        onUpdated();
+      } else {
+        onClose();
+      }
+    },
+    onError: (error) => {
+      console.error('Error updating quotation:', error);
+      
+      // Show error toast
+      toast({
+        title: 'Error',
+        description: 'Failed to update quotation',
+        variant: 'destructive',
+      });
+    }
+  });
+
+  const handleSubmit = async () => {
+    if (!customerName || !customerMobile) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all customer details',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (cart.some((item) => !item.name || item.quantity <= 0 || item.price <= 0)) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all item details correctly',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    try {
+      // Create updated quotation data
+      const updatedQuotationData = {
+        ...quotationDetails,
+        customerDetails: {
+          customerName,
+          customerMobile,
+        },
+        discountPercentage,
+        cart,
+        quotationDetails: quotationInfo,
+        total: calculateTotal(),
+        updatedAt: new Date(),
+      }
+
+      // Execute the mutation
+      updateQuotationMutation.mutate(updatedQuotationData);
+    } catch (error) {
+      console.error('Error updating quotation:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to update quotation',
+        variant: 'destructive',
+      })
+    }
+  }
 
   // Handle item changes
   const handleItemChange = (index: number, field: string, value: any) => {
@@ -95,65 +181,6 @@ export function EditQuotationModal({
     setCart(cart.filter((_, i) => i !== index))
   }
 
-  // Save the updated quotation
-  const handleSaveQuotation = async () => {
-    try {
-      setIsSubmitting(true)
-
-      // Validate the form data
-      if (!customerDetails.customerName) {
-        toast({
-          title: 'Validation Error',
-          description: 'Customer name is required',
-          variant: 'destructive',
-        })
-        setIsSubmitting(false)
-        return
-      }
-
-      if (cart.length === 0) {
-        toast({
-          title: 'Validation Error',
-          description: 'At least one item is required',
-          variant: 'destructive',
-        })
-        setIsSubmitting(false)
-        return
-      }
-
-      // Create updated quotation data
-      const updatedQuotation = {
-        customerDetails,
-        discountPercentage,
-        cart,
-        quotationDetails: quotationInfo,
-        total,
-        updatedAt: new Date().getTime(),
-      }
-
-      // Update the quotation in Firestore
-      await updateQuotation(quotationId, updatedQuotation)
-
-      toast({
-        title: 'Success',
-        description: 'Quotation updated successfully',
-      })
-
-      // Callback for refreshing data
-      onUpdated()
-      onClose()
-    } catch (error) {
-      console.error('Error updating quotation:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to update quotation',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="flex max-h-[90vh] max-w-[1200px] flex-col p-0">
@@ -171,12 +198,9 @@ export function EditQuotationModal({
                   <Label htmlFor="customerName">Customer Name</Label>
                   <Input
                     id="customerName"
-                    value={customerDetails.customerName}
+                    value={customerName}
                     onChange={(e) =>
-                      setCustomerDetails({
-                        ...customerDetails,
-                        customerName: e.target.value,
-                      })
+                      setCustomerName(e.target.value)
                     }
                     placeholder="Enter customer name"
                   />
@@ -185,12 +209,9 @@ export function EditQuotationModal({
                   <Label htmlFor="customerMobile">Mobile Number</Label>
                   <Input
                     id="customerMobile"
-                    value={customerDetails.customerMobile}
+                    value={customerMobile}
                     onChange={(e) =>
-                      setCustomerDetails({
-                        ...customerDetails,
-                        customerMobile: e.target.value,
-                      })
+                      setCustomerMobile(e.target.value)
                     }
                     placeholder="Enter mobile number"
                   />
@@ -396,13 +417,13 @@ export function EditQuotationModal({
             <div className="mt-6 rounded-md bg-muted p-4">
               <div className="flex justify-between text-lg font-medium">
                 <span>Total Amount:</span>
-                <span>₹{total.toFixed(2)}</span>
+                <span>₹{calculateTotal().toFixed(2)}</span>
               </div>
               {discountPercentage > 0 && (
                 <div className="flex justify-between text-sm">
                   <span>Discount ({discountPercentage}%):</span>
                   <span>
-                    -₹{((total * discountPercentage) / 100).toFixed(2)}
+                    -₹{((calculateTotal() * discountPercentage) / 100).toFixed(2)}
                   </span>
                 </div>
               )}
@@ -410,7 +431,7 @@ export function EditQuotationModal({
                 <div className="mt-2 flex justify-between text-lg font-medium">
                   <span>Final Amount:</span>
                   <span>
-                    ₹{(total - (total * discountPercentage) / 100).toFixed(2)}
+                    ₹{(calculateTotal() - (calculateTotal() * discountPercentage) / 100).toFixed(2)}
                   </span>
                 </div>
               )}
@@ -419,11 +440,11 @@ export function EditQuotationModal({
         </div>
 
         <DialogFooter className="border-t px-6 py-4">
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleSaveQuotation} disabled={isSubmitting}>
-            {isSubmitting ? (
+          <Button onClick={handleSubmit}>
+            {updateQuotationMutation.isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Saving...
