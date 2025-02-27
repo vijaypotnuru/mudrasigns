@@ -73,6 +73,9 @@ const AuthenticatedAllrequestsIndexLazyImport = createFileRoute(
 const AuthenticatedAllLeadsIndexLazyImport = createFileRoute(
   '/_authenticated/allLeads/',
 )()
+const AuthenticatedAllQuotationsIndexLazyImport = createFileRoute(
+  '/_authenticated/all-quotations/',
+)()
 const AuthenticatedSettingsNotificationsLazyImport = createFileRoute(
   '/_authenticated/settings/notifications',
 )()
@@ -328,6 +331,17 @@ const AuthenticatedAllLeadsIndexLazyRoute =
     import('./routes/_authenticated/allLeads/index.lazy').then((d) => d.Route),
   )
 
+const AuthenticatedAllQuotationsIndexLazyRoute =
+  AuthenticatedAllQuotationsIndexLazyImport.update({
+    id: '/all-quotations/',
+    path: '/all-quotations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/all-quotations/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 const AuthenticatedSettingsNotificationsLazyRoute =
   AuthenticatedSettingsNotificationsLazyImport.update({
     id: '/notifications',
@@ -524,6 +538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsLazyImport
       parentRoute: typeof AuthenticatedSettingsRouteLazyImport
     }
+    '/_authenticated/all-quotations/': {
+      id: '/_authenticated/all-quotations/'
+      path: '/all-quotations'
+      fullPath: '/all-quotations'
+      preLoaderRoute: typeof AuthenticatedAllQuotationsIndexLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/allLeads/': {
       id: '/_authenticated/allLeads/'
       path: '/allLeads'
@@ -663,6 +684,7 @@ const AuthenticatedSettingsRouteLazyRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteLazyRoute: typeof AuthenticatedSettingsRouteLazyRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAllQuotationsIndexLazyRoute: typeof AuthenticatedAllQuotationsIndexLazyRoute
   AuthenticatedAllLeadsIndexLazyRoute: typeof AuthenticatedAllLeadsIndexLazyRoute
   AuthenticatedAllrequestsIndexLazyRoute: typeof AuthenticatedAllrequestsIndexLazyRoute
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
@@ -683,6 +705,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteLazyRoute:
     AuthenticatedSettingsRouteLazyRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAllQuotationsIndexLazyRoute:
+    AuthenticatedAllQuotationsIndexLazyRoute,
   AuthenticatedAllLeadsIndexLazyRoute: AuthenticatedAllLeadsIndexLazyRoute,
   AuthenticatedAllrequestsIndexLazyRoute:
     AuthenticatedAllrequestsIndexLazyRoute,
@@ -727,6 +751,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/all-quotations': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/allLeads': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
@@ -760,6 +785,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/all-quotations': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/allLeads': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/allrequests': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
@@ -797,6 +823,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsLazyRoute
+  '/_authenticated/all-quotations/': typeof AuthenticatedAllQuotationsIndexLazyRoute
   '/_authenticated/allLeads/': typeof AuthenticatedAllLeadsIndexLazyRoute
   '/_authenticated/allrequests/': typeof AuthenticatedAllrequestsIndexLazyRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute
@@ -834,6 +861,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/all-quotations'
     | '/allLeads'
     | '/allrequests'
     | '/apps'
@@ -866,6 +894,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/all-quotations'
     | '/allLeads'
     | '/allrequests'
     | '/apps'
@@ -901,6 +930,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/all-quotations/'
     | '/_authenticated/allLeads/'
     | '/_authenticated/allrequests/'
     | '/_authenticated/apps/'
@@ -978,6 +1008,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/settings",
         "/_authenticated/",
+        "/_authenticated/all-quotations/",
         "/_authenticated/allLeads/",
         "/_authenticated/allrequests/",
         "/_authenticated/apps/",
@@ -1057,6 +1088,10 @@ export const routeTree = rootRoute
     "/_authenticated/settings/notifications": {
       "filePath": "_authenticated/settings/notifications.lazy.tsx",
       "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/all-quotations/": {
+      "filePath": "_authenticated/all-quotations/index.lazy.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/allLeads/": {
       "filePath": "_authenticated/allLeads/index.lazy.tsx",
