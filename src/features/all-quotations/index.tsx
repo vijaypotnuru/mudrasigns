@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { getAllQuotations } from '@/services/firebase/invoices'
 import { useQueryData } from '@/hooks/use-query-data'
 import { Header } from '@/components/layout/header'
@@ -30,7 +29,9 @@ export default function AllQuotations() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between gap-x-4 space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>All Quotations</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              All Quotations
+            </h2>
             <p className='text-muted-foreground'>
               Here&apos;s a list of your quotations!
             </p>

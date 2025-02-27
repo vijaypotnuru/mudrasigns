@@ -71,7 +71,7 @@ export function ReceiptPreviewModal({
     // Save invoice metadata in Firestore's "all-invoices" collection
     await addDoc(collection(db, 'all-invoices'), {
       invoiceUrl: downloadURL,
-      createdAt: new Date(),
+      createdAt: Date.now(),
       total,
       customerDetails,
       discountPercentage,
@@ -135,8 +135,6 @@ export function ReceiptPreviewModal({
       setIsPrinting(false)
     }
   }
-  
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

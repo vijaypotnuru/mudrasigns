@@ -100,147 +100,147 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: 'fullName',
+    accessorKey: 'customerName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Client Name' />
+      <DataTableColumnHeader column={column} title='Customer Name' />
     ),
     cell: ({ row }) => {
       return (
         <div className='flex space-x-2'>
           <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('fullName')}
+            {row.getValue('customerName')}
           </span>
         </div>
       )
     },
   },
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: 'customerMobile',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Phone Number' />
+      <DataTableColumnHeader column={column} title='Customer Mobile' />
     ),
     cell: ({ row }) => {
       return (
         <div className='flex space-x-2'>
           <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('phoneNumber')}
+            {row.getValue('customerMobile')}
           </span>
         </div>
       )
     },
   },
   {
-    accessorKey: 'companyName',
+    accessorKey: 'discountPercentage',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Company Name' />
+      <DataTableColumnHeader column={column} title='Discount %' />
     ),
     cell: ({ row }) => {
       return (
         <div className='flex space-x-2'>
           <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('companyName')}
+            {row.getValue('discountPercentage')}
           </span>
         </div>
       )
     },
   },
-  {
-    accessorKey: 'address',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Address' />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className='flex space-x-2'>
-          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('address')}
-          </span>
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'request',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Request' />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className='flex space-x-2'>
-          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('request')}
-          </span>
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'fileURL',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='File' />
-    ),
-    cell: ({ row }) => {
-      const fileURL = row.getValue('fileURL') as string
-      const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  // {
+  //   accessorKey: 'address',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='Address' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <div className='flex space-x-2'>
+  //         <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
+  //           {row.getValue('address')}
+  //         </span>
+  //       </div>
+  //     )
+  //   },
+  // },
+  // {
+  //   accessorKey: 'request',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='Request' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <div className='flex space-x-2'>
+  //         <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
+  //           {row.getValue('request')}
+  //         </span>
+  //       </div>
+  //     )
+  //   },
+  // },
+  // {
+  //   accessorKey: 'fileURL',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='File' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const fileURL = row.getValue('fileURL') as string
+  //     const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
-      return (
-        <div className='flex space-x-2'>
-          {fileURL ? (
-            <>
-              <Avatar
-                className='h-10 w-10 cursor-pointer rounded-md'
-                onClick={() => setIsPreviewOpen(true)}
-              >
-                <AvatarImage src={fileURL} className='rounded-md' />
-                <AvatarFallback>File</AvatarFallback>
-              </Avatar>
-              <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className='max-w-[95vw] px-1 sm:max-w-2xl'>
-                  <div className='flex h-full items-center justify-center'>
-                    <img
-                      src={fileURL}
-                      alt='Full preview'
-                      className='h-auto max-h-[80vh] w-full rounded-md object-contain'
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </>
-          ) : (
-            <span className='text-muted-foreground'>No file</span>
-          )}
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'isVerified',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Status' />
-    ),
-    cell: ({ row }) => {
-      const [dialogOpen, setDialogOpen] = useState(false)
-      const queryClient = useQueryClient()
+  //     return (
+  //       <div className='flex space-x-2'>
+  //         {fileURL ? (
+  //           <>
+  //             <Avatar
+  //               className='h-10 w-10 cursor-pointer rounded-md'
+  //               onClick={() => setIsPreviewOpen(true)}
+  //             >
+  //               <AvatarImage src={fileURL} className='rounded-md' />
+  //               <AvatarFallback>File</AvatarFallback>
+  //             </Avatar>
+  //             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+  //               <DialogContent className='max-w-[95vw] px-1 sm:max-w-2xl'>
+  //                 <div className='flex h-full items-center justify-center'>
+  //                   <img
+  //                     src={fileURL}
+  //                     alt='Full preview'
+  //                     className='h-auto max-h-[80vh] w-full rounded-md object-contain'
+  //                   />
+  //                 </div>
+  //               </DialogContent>
+  //             </Dialog>
+  //           </>
+  //         ) : (
+  //           <span className='text-muted-foreground'>No file</span>
+  //         )}
+  //       </div>
+  //     )
+  //   },
+  // },
+  // {
+  //   accessorKey: 'isVerified',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='Status' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const [dialogOpen, setDialogOpen] = useState(false)
+  //     const queryClient = useQueryClient()
 
-      return (
-        <div className='flex items-center gap-2'>
-          <Button
-            variant='ghost'
-            className='h-8 px-2'
-            onClick={() => setDialogOpen(true)}
-          >
-            {row.getValue('isVerified')}
-          </Button>
-          <StatusUpdateDialog
-            open={dialogOpen}
-            onOpenChange={setDialogOpen}
-            currentStatus={row.getValue('isVerified')}
-            requestId={row.original.id}
-          />
-        </div>
-      )
-    },
-  },
+  //     return (
+  //       <div className='flex items-center gap-2'>
+  //         <Button
+  //           variant='ghost'
+  //           className='h-8 px-2'
+  //           onClick={() => setDialogOpen(true)}
+  //         >
+  //           {row.getValue('isVerified')}
+  //         </Button>
+  //         <StatusUpdateDialog
+  //           open={dialogOpen}
+  //           onOpenChange={setDialogOpen}
+  //           currentStatus={row.getValue('isVerified')}
+  //           requestId={row.original.id}
+  //         />
+  //       </div>
+  //     )
+  //   },
+  // },
   // {
   //   accessorKey: 'status',
   //   header: ({ column }) => (
@@ -295,8 +295,8 @@ export const columns: ColumnDef<Task>[] = [
   //     return value.includes(row.getValue(id))
   //   },
   // },
-  {
-    id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} id={row.original.id}/>,
-  },
+  // {
+  //   id: 'actions',
+  //   cell: ({ row }) => <DataTableRowActions row={row} id={row.original.id}/>,
+  // },
 ]
