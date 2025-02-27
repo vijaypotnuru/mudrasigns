@@ -49,11 +49,11 @@ export function DataTable<TData, TValue>({
         id: 'globalFilter',
         filterFn: (row, columnId, filterValue) => {
           const searchableColumns = [
-            'request',
-            'phoneNumber',
-            'fullName',
-            'companyName',
-            'address',
+            'customerMobile',
+            'customerName',
+            'discountPercentage',
+            'invoice_number',
+            'total',
           ]
           return searchableColumns.some((column) => {
             const value = row.getValue(column)
