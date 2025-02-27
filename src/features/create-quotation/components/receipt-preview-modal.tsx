@@ -55,8 +55,10 @@ export function ReceiptPreviewModal({
       // Create an HTML blob of the quotation preview content
       const htmlContent = printRef.current.outerHTML;
       
-      // Create a unique filename for storage
+      // Generate timestamp for the document
       const timestamp = Date.now();
+      
+      // Create a unique filename for storage
       const filename = `quotations/${customerDetails.customerName.replace(/\s+/g, '_')}_${timestamp}.html`;
       
       // Upload HTML to Firebase Storage
@@ -75,7 +77,7 @@ export function ReceiptPreviewModal({
         cart,
         quotationDetails,
         fileURL: downloadURL,
-        createdAt: new Date(),
+        createdAt: Date.now(),
       };
       
       const docRef = await addDoc(collection(db, 'mudra_sign_all_quotations'), quotationData);

@@ -163,7 +163,7 @@ export function EditInvoiceModal({
       cart,
       invoiceDetails: invoiceInfo,
       total: calculateTotal(),
-      updatedAt: new Date(),
+      updatedAt: Date.now(),
     }
 
     // Execute the mutation

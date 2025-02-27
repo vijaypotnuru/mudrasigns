@@ -48,11 +48,17 @@ export const getInvoiceById = async (invoiceId: string) => {
 
 export const createInvoice = async (invoiceData: any) => {
   try {
-    const docRef = await addDoc(collection(db, 'mudra_sign_all_invoices'), invoiceData)
-    return { id: docRef.id, ...invoiceData }
+    // Ensure createdAt uses Date.now()
+    const dataWithTimestamp = {
+      ...invoiceData,
+      createdAt: Date.now()
+    };
+    
+    const docRef = await addDoc(collection(db, 'mudra_sign_all_invoices'), dataWithTimestamp);
+    return { id: docRef.id, ...dataWithTimestamp };
   } catch (error) {
-    console.error('Error creating invoice:', error)
-    throw error
+    console.error('Error creating invoice:', error);
+    throw error;
   }
 }
 

@@ -38,7 +38,7 @@ export default function ReceiptFormPage() {
   ])
 
   const [quotationDetails, setQuotationDetails] = useState({
-    quotation_number: `QTN-${new Date().getTime().toString().slice(-6)}`,
+    quotation_number: `QTN-${Date.now().toString().slice(-6)}`,
     order_date: new Date().toLocaleDateString('en-IN'),
     order_time: new Date().toLocaleTimeString('en-IN'),
   })

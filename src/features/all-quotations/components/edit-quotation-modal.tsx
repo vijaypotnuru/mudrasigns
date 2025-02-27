@@ -135,7 +135,7 @@ export function EditQuotationModal({
         cart,
         quotationDetails: quotationInfo,
         total: calculateTotal(),
-        updatedAt: new Date(),
+        updatedAt: Date.now(),
       }
 
       // Execute the mutation

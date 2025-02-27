@@ -348,7 +348,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                     <td>
                       :{' '}
                       {quotationDetails?.quotation_number ||
-                        `QUO-${new Date().getTime().toString().slice(-6)}`}
+                        `QUO-${Date.now().toString().slice(-6)}`}
                     </td>
                   </tr>
                   <tr>

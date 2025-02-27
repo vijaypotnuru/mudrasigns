@@ -32,15 +32,15 @@ export function GenerateInvoiceModal({
   
   // Generate invoice number and dates
   const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`
-  const today = new Date()
-  const dueDate = new Date(today)
-  dueDate.setDate(today.getDate() + 15) // Set due date to 15 days from now
+  const today = new Date(Date.now())
+  const dueDate = new Date(Date.now())
+  dueDate.setDate(dueDate.getDate() + 15) // Set due date to 15 days from now
   
   // Create modified quotation details to display as invoice
   const invoiceQuotationDetails = {
     quotation_number: invoiceNumber, // Use invoice number in place of quotation number
     order_date: format(today, 'dd/MM/yyyy'),
-    order_time: new Date().toLocaleTimeString('en-IN'),
+    order_time: new Date(Date.now()).toLocaleTimeString('en-IN'),
   }
 
   // Create invoice data object for saving to database
