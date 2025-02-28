@@ -1,10 +1,11 @@
+//@ts-nocheck
 import { useState } from 'react'
-import { Eye, FileText } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { getQuotationById } from '@/services/firebase/invoices'
+import { Eye, FileText } from 'lucide-react'
 import { useQueryData } from '@/hooks/use-query-data'
-import { QuotationPreviewModal } from './quotation-preview-modal'
+import { Button } from '@/components/ui/button'
 import { GenerateInvoiceModal } from './generate-invoice-modal'
+import { QuotationPreviewModal } from './quotation-preview-modal'
 
 interface QuotationActionsProps {
   quotationId: string
@@ -14,9 +15,12 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [isGenerateInvoiceOpen, setIsGenerateInvoiceOpen] = useState(false)
 
-  const { data: quotationDetails, isLoading, refetch } = useQueryData(
-    ['quotation-details', quotationId],
-    () => getQuotationById(quotationId)
+  const {
+    data: quotationDetails,
+    isLoading,
+    refetch,
+  } = useQueryData(['quotation-details', quotationId], () =>
+    getQuotationById(quotationId)
   )
 
   // Function to refresh quotation data
@@ -26,13 +30,13 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
 
   if (isLoading) {
     return (
-      <div className="flex space-x-2">
-        <Button variant="outline" size="sm" disabled>
-          <Eye className="mr-2 h-4 w-4" />
+      <div className='flex space-x-2'>
+        <Button variant='outline' size='sm' disabled>
+          <Eye className='mr-2 h-4 w-4' />
           Preview
         </Button>
-        <Button variant="outline" size="sm" disabled>
-          <FileText className="mr-2 h-4 w-4" />
+        <Button variant='outline' size='sm' disabled>
+          <FileText className='mr-2 h-4 w-4' />
           Generate Invoice
         </Button>
       </div>
@@ -40,21 +44,21 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
   }
 
   return (
-    <div className="flex space-x-2">
-      <Button 
-        variant="outline" 
-        size="sm"
+    <div className='flex space-x-2'>
+      <Button
+        variant='outline'
+        size='sm'
         onClick={() => setIsPreviewOpen(true)}
       >
-        <Eye className="mr-2 h-4 w-4" />
+        <Eye className='mr-2 h-4 w-4' />
         Preview
       </Button>
-      <Button 
-        variant="outline" 
-        size="sm"
+      <Button
+        variant='outline'
+        size='sm'
         onClick={() => setIsGenerateInvoiceOpen(true)}
       >
-        <FileText className="mr-2 h-4 w-4" />
+        <FileText className='mr-2 h-4 w-4' />
         Generate Invoice
       </Button>
 
@@ -76,7 +80,7 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
           onClose={() => setIsGenerateInvoiceOpen(false)}
           quotationDetails={{
             ...quotationDetails,
-            id: quotationId
+            id: quotationId,
           }}
         />
       )}

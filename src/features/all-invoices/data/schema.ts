@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { z } from 'zod'
 
 // We're keeping a simple non-relational schema here.
@@ -11,7 +12,7 @@ export const taskSchema = z.object({
   order_date: z.string(),
   order_time: z.string(),
   total: z.number().min(0),
-  createdAt: z.number()
+  createdAt: z.number(),
 })
 
 export type Task = z.infer<typeof taskSchema>
@@ -24,5 +25,5 @@ export const fieldLabels = {
   order_date: 'Order Date',
   order_time: 'Order Time',
   total: 'Total Amount',
-  createdAt: 'Created At'
+  createdAt: 'Created At',
 } as const

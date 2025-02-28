@@ -427,8 +427,8 @@ export function EditInvoiceModal({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={updateInvoiceMutation.isLoading}>
-            {updateInvoiceMutation.isLoading ? (
+          <Button onClick={handleSubmit} disabled={updateInvoiceMutation.isPending}>
+            {updateInvoiceMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Saving...

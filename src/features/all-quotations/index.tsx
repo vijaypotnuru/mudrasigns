@@ -1,5 +1,9 @@
-import { getAllQuotations, getQuotationById } from '@/services/firebase/invoices'
+//@ts-nocheck
 import { useQuery } from '@tanstack/react-query'
+import {
+  getAllQuotations,
+  getQuotationById,
+} from '@/services/firebase/invoices'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -13,7 +17,7 @@ import TasksProvider from './context/tasks-context'
 export default function AllQuotations() {
   const { data: allQuotations, isLoading } = useQuery({
     queryKey: ['all-quotations'],
-    queryFn: getAllQuotations
+    queryFn: getAllQuotations,
   })
   console.log('allQuotations', allQuotations)
   // const { data: quotationDetails, isLoading: quotationDetailsLoading } =

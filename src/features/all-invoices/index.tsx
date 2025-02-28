@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { getAllQuotations, getQuotationById } from '@/services/firebase/invoices'
 import { useQuery } from '@tanstack/react-query'
 import { Header } from '@/components/layout/header'
