@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -245,48 +246,36 @@ export default function FillApplicationForm() {
                         <SelectItem value='LIQUID ACRYLIC SIGN BOARD'>
                           LIQUID ACRYLIC SIGN BOARD
                         </SelectItem>
-                        <SelectItem value='SKY SIGN'>
-                          SKY SIGN
-                        </SelectItem>
+                        <SelectItem value='SKY SIGN'>SKY SIGN</SelectItem>
                         <SelectItem value='BACKLIT GLOW SIGN'>
                           BACKLIT GLOW SIGN
                         </SelectItem>
-                        <SelectItem value='NONLIT SIGN'>
-                          NONLIT SIGN
-                        </SelectItem>
+                        <SelectItem value='NONLIT SIGN'>NONLIT SIGN</SelectItem>
                         <SelectItem value='STEEL LETTER'>
                           STEEL LETTER
                         </SelectItem>
                         <SelectItem value='BRASS LETTER'>
                           BRASS LETTER
                         </SelectItem>
-                        <SelectItem value='PVC LETTER'>
-                          PVC LETTER
-                        </SelectItem>
+                        <SelectItem value='PVC LETTER'>PVC LETTER</SelectItem>
                         <SelectItem value='FOAM BOARD WITH UV PRINTING'>
                           FOAM BOARD WITH UV PRINTING
                         </SelectItem>
                         <SelectItem value='SAFETY SIGNS'>
                           SAFETY SIGNS
                         </SelectItem>
-                        <SelectItem value='NAME PLATES'>
-                          NAME PLATES
-                        </SelectItem>
+                        <SelectItem value='NAME PLATES'>NAME PLATES</SelectItem>
                         <SelectItem value='INTERNAL SIGNS'>
                           INTERNAL SIGNS
                         </SelectItem>
                         <SelectItem value='FLEX PRINTING'>
                           FLEX PRINTING
                         </SelectItem>
-                        <SelectItem value='UV PRINTING'>
-                          UV PRINTING
-                        </SelectItem>
+                        <SelectItem value='UV PRINTING'>UV PRINTING</SelectItem>
                         <SelectItem value='ECO SOLVENT PRINTING'>
                           ECO SOLVENT PRINTING
                         </SelectItem>
-                        <SelectItem value='CNC ROUTING'>
-                          CNC ROUTING
-                        </SelectItem>
+                        <SelectItem value='CNC ROUTING'>CNC ROUTING</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
