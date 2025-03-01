@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -52,12 +51,22 @@ const formSchema = z.object({
   }),
   request: z.enum(
     [
-      'New Signboard',
-      'Partially Not Working',
-      'Fully Not Working',
-      'Interested',
-      'Not Interested',
-      'Quotation',
+      'CHANNEL LED SIGN BOARD',
+      'LIQUID ACRYLIC SIGN BOARD',
+      'SKY SIGN',
+      'BACKLIT GLOW SIGN',
+      'NONLIT SIGN',
+      'STEEL LETTER',
+      'BRASS LETTER',
+      'PVC LETTER',
+      'FOAM BOARD WITH UV PRINTING',
+      'SAFETY SIGNS',
+      'NAME PLATES',
+      'INTERNAL SIGNS',
+      'FLEX PRINTING',
+      'UV PRINTING',
+      'ECO SOLVENT PRINTING',
+      'CNC ROUTING',
     ],
     {
       required_error: 'Please select a request type.',
@@ -230,20 +239,54 @@ export default function FillApplicationForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='New Signboard'>
-                          New Signboard
+                        <SelectItem value='CHANNEL LED SIGN BOARD'>
+                          CHANNEL LED SIGN BOARD
                         </SelectItem>
-                        <SelectItem value='Partially Not Working'>
-                          Partially Not Working
+                        <SelectItem value='LIQUID ACRYLIC SIGN BOARD'>
+                          LIQUID ACRYLIC SIGN BOARD
                         </SelectItem>
-                        <SelectItem value='Fully Not Working'>
-                          Fully Not Working
+                        <SelectItem value='SKY SIGN'>
+                          SKY SIGN
                         </SelectItem>
-                        <SelectItem value='Interested'>Interested</SelectItem>
-                        <SelectItem value='Not Interested'>
-                          Not Interested
+                        <SelectItem value='BACKLIT GLOW SIGN'>
+                          BACKLIT GLOW SIGN
                         </SelectItem>
-                        <SelectItem value='Quotation'>Quotation</SelectItem>
+                        <SelectItem value='NONLIT SIGN'>
+                          NONLIT SIGN
+                        </SelectItem>
+                        <SelectItem value='STEEL LETTER'>
+                          STEEL LETTER
+                        </SelectItem>
+                        <SelectItem value='BRASS LETTER'>
+                          BRASS LETTER
+                        </SelectItem>
+                        <SelectItem value='PVC LETTER'>
+                          PVC LETTER
+                        </SelectItem>
+                        <SelectItem value='FOAM BOARD WITH UV PRINTING'>
+                          FOAM BOARD WITH UV PRINTING
+                        </SelectItem>
+                        <SelectItem value='SAFETY SIGNS'>
+                          SAFETY SIGNS
+                        </SelectItem>
+                        <SelectItem value='NAME PLATES'>
+                          NAME PLATES
+                        </SelectItem>
+                        <SelectItem value='INTERNAL SIGNS'>
+                          INTERNAL SIGNS
+                        </SelectItem>
+                        <SelectItem value='FLEX PRINTING'>
+                          FLEX PRINTING
+                        </SelectItem>
+                        <SelectItem value='UV PRINTING'>
+                          UV PRINTING
+                        </SelectItem>
+                        <SelectItem value='ECO SOLVENT PRINTING'>
+                          ECO SOLVENT PRINTING
+                        </SelectItem>
+                        <SelectItem value='CNC ROUTING'>
+                          CNC ROUTING
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

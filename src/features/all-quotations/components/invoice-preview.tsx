@@ -179,6 +179,15 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
           fontFamily: 'Arial, sans-serif',
         }}
       >
+        {/* Header Image */}
+        <div className='mb-4 text-center'>
+          <img 
+            src='/images/mudra-signs-headder.png' 
+            alt="Mudra Signs Header" 
+            className='max-w-full h-auto' 
+          />
+        </div>
+        
         {/* Header */}
         <div className='mb-8 flex items-start justify-between border-b pb-6'>
           <div>
@@ -192,11 +201,11 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
               Mudra Signs
             </h2>
             <p className='text-sm text-gray-600'>
-              9-26-52, Near Chandana Brothers
+              GF- E, Opp. Seven Hills Hospital, Sterling Heights
             </p>
-            <p className='text-sm text-gray-600'>C.B.M Compound</p>
-            <p className='text-sm text-gray-600'>Visakhapatnam, AP 530003</p>
-            <p className='text-sm text-gray-600'>GSTIN: 37BMYPS3816Q1ZD</p>
+            <p className='text-sm text-gray-600'>Ramnagar, Vizag 530002</p>
+            <p className='text-sm text-gray-600'>Ph: 6 303 40 42 40, 6 303 404 303</p>
+            <p className='text-sm text-gray-600'>Email: mudrasignage@gmail.com</p>
           </div>
         </div>
 

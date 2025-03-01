@@ -157,19 +157,19 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Quotation Management',
-      roles: ['admin'],
+      roles: ['admin', 'employee'],
       items: [
         {
           title: 'Create Quotation',
           url: '/create-quotation',
           icon: IconReceiptRupee,
-          roles: ['admin'],
+          roles: ['admin', 'employee'],
         },
         {
           title: 'All Quotations',
           url: '/all-quotations',
           icon: IconInvoice,
-          roles: ['admin'],
+          roles: ['admin', 'employee'],
         },
         // {
         //   title: 'Employee Request',

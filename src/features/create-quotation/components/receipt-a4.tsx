@@ -114,18 +114,6 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         fontSize: '12px',
         fontWeight: 'bold',
       },
-      companyName: {
-        fontFamily: 'Times New Roman, serif',
-        fontSize: '32px',
-        fontWeight: 'bold',
-        marginBottom: '5px',
-        display: 'flex',
-        alignItems: 'center',
-      },
-      companyDetails: {
-        fontSize: '11px',
-        lineHeight: '1.4',
-      },
       buyerSection: {
         margin: '0 20px',
         border: '1px solid #000',
@@ -289,31 +277,26 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         <div style={styles.header}>
           <div style={styles.headerTop}>
             <div style={{ width: '200px' }}></div>
-            <div style={styles.gstTitle}>{isInvoice ? 'TAX INVOICE' : 'QUOTATION'}</div>
+            <div style={styles.gstTitle}>
+              {isInvoice ? 'TAX INVOICE' : 'QUOTATION'}
+            </div>
             <div style={styles.originalCopy}>ORIGINAL FOR RECIPIENT</div>
           </div>
-          <div style={styles.companyName}>
-            <img src='/images/main-logo.png' width={50} />
-            Mudra Signs
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <img
+              src='/images/mudra-signs-headder.png'
+              alt='Mudra Signs Header'
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
           </div>
-          <div style={styles.companyDetails}>
-            Floor No.: Ground Floor
+          <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+            GF- E, Opp. Seven Hills Hospital, Sterling Heights
             <br />
-            Building No./Flat No.: 519/3
+            Ramnagar, Vizag 530002
             <br />
-            Road/Street: Revathipathi street
+            Contact: 6 303 40 42 40, 6 303 404 303, 924 664 6665
             <br />
-            Locality/Sub Locality: Tolusurupalle
-            <br />
-            City/Town/Village: Tekkali
-            <br />
-            District: Srikakulam
-            <br />
-            State: Andhra Pradesh
-            <br />
-            PIN Code: 532201
-            <br />
-            Contact No: 97050 64303, 7702 821 254
+            Email: mudrasignage@gmail.com
             <br />
           </div>
         </div>
@@ -487,9 +470,6 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
               For Mudra Signs
               <div style={{ marginTop: '40px' }}>Authorized Signatory</div>
             </div>
-          </div>
-          <div style={styles.jurisdiction}>
-            Subject to Srikakulam Jurisdiction
           </div>
         </div>
       </div>
