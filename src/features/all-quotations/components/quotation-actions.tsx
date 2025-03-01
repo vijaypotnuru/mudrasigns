@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getQuotationById } from '@/services/firebase/invoices'
 import { Eye, FileText } from 'lucide-react'
 import { useQueryData } from '@/hooks/use-query-data'
@@ -14,6 +14,13 @@ interface QuotationActionsProps {
 export function QuotationActions({ quotationId }: QuotationActionsProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [isGenerateInvoiceOpen, setIsGenerateInvoiceOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    // Check if user is admin
+    const msadmin = localStorage.getItem('msadmin')
+    setIsAdmin(!!msadmin)
+  }, [])
 
   const {
     data: quotationDetails,
@@ -53,14 +60,26 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
         <Eye className='mr-2 h-4 w-4' />
         Preview
       </Button>
-      <Button
-        variant='outline'
-        size='sm'
-        onClick={() => setIsGenerateInvoiceOpen(true)}
-      >
-        <FileText className='mr-2 h-4 w-4' />
-        Generate Invoice
-      </Button>
+      {isAdmin ? (
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => setIsGenerateInvoiceOpen(true)}
+        >
+          <FileText className='mr-2 h-4 w-4' />
+          Generate Invoice
+        </Button>
+      ) : (
+        <Button
+          variant='outline'
+          size='sm'
+          disabled
+          title="Only admin users can generate invoices"
+        >
+          <FileText className='mr-2 h-4 w-4' />
+          Generate Invoice
+        </Button>
+      )}
 
       {/* Preview Modal */}
       {quotationDetails && (
@@ -74,7 +93,7 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
       )}
 
       {/* Generate Invoice Modal */}
-      {quotationDetails && (
+      {quotationDetails && isAdmin && (
         <GenerateInvoiceModal
           isOpen={isGenerateInvoiceOpen}
           onClose={() => setIsGenerateInvoiceOpen(false)}
