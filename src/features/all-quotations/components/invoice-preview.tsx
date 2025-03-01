@@ -367,6 +367,13 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
               <p>Mudra Signs</p>
             </div>
             <div className='text-right'>
+              <div className='mb-1'>
+                <img 
+                  src="/images/mudra-signature.png" 
+                  alt="Authorized Signature" 
+                  className='ml-auto w-32 h-auto' 
+                />
+              </div>
               <p className='mb-6 text-sm text-gray-600'>Authorized Signatory</p>
               <div className='mt-4 border-t border-gray-300 pt-1'>
                 <p className='text-xs text-gray-500'>E&OE</p>

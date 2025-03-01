@@ -72,7 +72,7 @@ export default function ReceiptFormPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Form validation
     if (!customerDetails.customerName || !customerDetails.customerMobile) {
       toast({
@@ -83,7 +83,9 @@ export default function ReceiptFormPage() {
       return
     }
 
-    if (cart.some(item => !item.name || item.quantity <= 0 || item.price <= 0)) {
+    if (
+      cart.some((item) => !item.name || item.quantity <= 0 || item.price <= 0)
+    ) {
       toast({
         title: 'Error',
         description: 'Please fill in all item details correctly',
@@ -102,10 +104,10 @@ export default function ReceiptFormPage() {
     setCustomerDetails({
       customerName: '',
       customerMobile: '',
-    });
+    })
 
     // Reset discount
-    setDiscountPercentage(0);
+    setDiscountPercentage(0)
 
     // Reset cart to a single empty item
     setCart([
@@ -118,15 +120,15 @@ export default function ReceiptFormPage() {
         sgst: 6,
         cgst: 6,
       },
-    ]);
+    ])
 
     // Generate a new quotation number with the current timestamp
     setQuotationDetails({
       quotation_number: `QTN-${Date.now().toString().slice(-6)}`,
       order_date: new Date().toLocaleDateString('en-IN'),
       order_time: new Date().toLocaleTimeString('en-IN'),
-    });
-  };
+    })
+  }
 
   return (
     <div className='container mx-auto py-8'>
@@ -198,27 +200,30 @@ export default function ReceiptFormPage() {
                     <Label htmlFor='orderDate'>Date (DD/MM/YYYY)</Label>
                     <Input
                       id='orderDate'
-                      placeholder="DD/MM/YYYY"
+                      placeholder='DD/MM/YYYY'
                       value={quotationDetails.order_date}
                       onChange={(e) => {
-                        const value = e.target.value;
+                        const value = e.target.value
                         // Only allow digits and forward slashes
                         if (!/^[0-9/]*$/.test(value)) {
-                          return;
+                          return
                         }
-                        
+
                         // Format as DD/MM/YYYY while typing
-                        let formattedValue = value;
+                        let formattedValue = value
                         if (value.length === 2 && !value.includes('/')) {
-                          formattedValue = value + '/';
-                        } else if (value.length === 5 && value.split('/').length === 2) {
-                          formattedValue = value + '/';
+                          formattedValue = value + '/'
+                        } else if (
+                          value.length === 5 &&
+                          value.split('/').length === 2
+                        ) {
+                          formattedValue = value + '/'
                         }
-                        
+
                         setQuotationDetails({
                           ...quotationDetails,
                           order_date: formattedValue,
-                        });
+                        })
                       }}
                       maxLength={10}
                     />

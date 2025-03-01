@@ -469,7 +469,14 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             </div>
             <div>
               For Mudra Signs
-              <div style={{ marginTop: '40px' }}>Authorized Signatory</div>
+              <div style={{ marginTop: '10px' }}>
+                <img 
+                  src="/images/mudra-signature.png" 
+                  alt="Authorized Signature" 
+                  style={{ width: '120px', height: 'auto' }} 
+                />
+              </div>
+              <div style={{ marginTop: '5px' }}>Authorized Signatory</div>
             </div>
           </div>
         </div>
