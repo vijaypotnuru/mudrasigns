@@ -25,6 +25,7 @@ export default function ReceiptFormPage() {
 
   const [discountPercentage, setDiscountPercentage] = useState(0)
 
+  // We now keep a simpler cart state since GST is calculated differently
   const [cart, setCart] = useState([
     {
       name: '',
@@ -32,8 +33,6 @@ export default function ReceiptFormPage() {
       unit: '',
       quantity: 2,
       price: 15.5,
-      sgst: 6,
-      cgst: 6,
     },
   ])
 
@@ -54,8 +53,6 @@ export default function ReceiptFormPage() {
         unit: '',
         quantity: 1,
         price: 0,
-        sgst: 6,
-        cgst: 6,
       },
     ])
   }
@@ -117,8 +114,6 @@ export default function ReceiptFormPage() {
         unit: '',
         quantity: 1,
         price: 0,
-        sgst: 6,
-        cgst: 6,
       },
     ])
 
@@ -344,43 +339,6 @@ export default function ReceiptFormPage() {
                           >
                             <Trash2 className='h-4 w-4' />
                           </Button>
-                        </div>
-                      </div>
-
-                      <div className='grid grid-cols-2 gap-3 md:col-span-7'>
-                        <div className='space-y-1'>
-                          <Label htmlFor={`item-sgst-${index}`}>SGST %</Label>
-                          <Input
-                            id={`item-sgst-${index}`}
-                            type='number'
-                            value={item.sgst}
-                            onChange={(e) =>
-                              handleItemChange(
-                                index,
-                                'sgst',
-                                Number.parseFloat(e.target.value) || 0
-                              )
-                            }
-                            min='0'
-                            step='0.01'
-                          />
-                        </div>
-                        <div className='space-y-1'>
-                          <Label htmlFor={`item-cgst-${index}`}>CGST %</Label>
-                          <Input
-                            id={`item-cgst-${index}`}
-                            type='number'
-                            value={item.cgst}
-                            onChange={(e) =>
-                              handleItemChange(
-                                index,
-                                'cgst',
-                                Number.parseFloat(e.target.value) || 0
-                              )
-                            }
-                            min='0'
-                            step='0.01'
-                          />
                         </div>
                       </div>
                     </div>

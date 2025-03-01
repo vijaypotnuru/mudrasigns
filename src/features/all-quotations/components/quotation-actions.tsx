@@ -14,13 +14,9 @@ interface QuotationActionsProps {
 export function QuotationActions({ quotationId }: QuotationActionsProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [isGenerateInvoiceOpen, setIsGenerateInvoiceOpen] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
 
-  useEffect(() => {
-    // Check if user is admin
-    const msadmin = localStorage.getItem('msadmin')
-    setIsAdmin(!!msadmin)
-  }, [])
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  console.log('user', user)
 
   const {
     data: quotationDetails,
@@ -60,7 +56,7 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
         <Eye className='mr-2 h-4 w-4' />
         Preview
       </Button>
-      {isAdmin ? (
+      {user.role === 'admin' ? (
         <Button
           variant='outline'
           size='sm'
@@ -70,15 +66,7 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
           Generate Invoice
         </Button>
       ) : (
-        <Button
-          variant='outline'
-          size='sm'
-          disabled
-          title="Only admin users can generate invoices"
-        >
-          <FileText className='mr-2 h-4 w-4' />
-          Generate Invoice
-        </Button>
+        <></>
       )}
 
       {/* Preview Modal */}
@@ -93,7 +81,7 @@ export function QuotationActions({ quotationId }: QuotationActionsProps) {
       )}
 
       {/* Generate Invoice Modal */}
-      {quotationDetails && isAdmin && (
+      {quotationDetails && user.role === 'admin' && (
         <GenerateInvoiceModal
           isOpen={isGenerateInvoiceOpen}
           onClose={() => setIsGenerateInvoiceOpen(false)}

@@ -71,10 +71,16 @@ export function ReceiptPreviewModal({
       const downloadURL = await getDownloadURL(uploadTask.ref);
       
       // Add metadata to Firestore
+      const discountedTotal = total - (total * discountPercentage) / 100;
+      const gstAmount = (discountedTotal * 18) / 100;
+      const finalTotal = discountedTotal + gstAmount;
+      
       const quotationData = {
         customerDetails,
         discountPercentage,
-        total: total - (total * discountPercentage) / 100,
+        discountedTotal,
+        gstAmount,
+        finalTotal,
         cart,
         quotationDetails,
         fileURL: downloadURL,

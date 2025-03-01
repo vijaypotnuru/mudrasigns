@@ -46,37 +46,10 @@ export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
 
     const discountAmount = (totalAmount * discountPercentage) / 100
     const amountAfterDiscount = totalAmount - discountAmount
-
-    // Updated GST calculation logic
-    const calculateItemGST = (item: any) => {
-      const itemPrice = item.price
-      const itemQuantity = item.quantity
-      const baseAmount = itemPrice * itemQuantity
-
-      return {
-        sgst: (baseAmount * (item.sgst || 0)) / 100,
-        cgst: (baseAmount * (item.cgst || 0)) / 100,
-      }
-    }
-
-    // Calculate GST components from individual items
-    const gstSummary = validCart.reduce(
-      (summary, item) => {
-        const { sgst, cgst } = calculateItemGST(item)
-        const itemTotal = item.quantity * item.price
-        const itemBaseAmount =
-          itemTotal / (1 + ((item.sgst || 0) + (item.cgst || 0)) / 100)
-
-        return {
-          baseAmount: summary.baseAmount + itemBaseAmount,
-          sgstAmount: summary.sgstAmount + sgst,
-          cgstAmount: summary.cgstAmount + cgst,
-        }
-      },
-      { baseAmount: 0, sgstAmount: 0, cgstAmount: 0 }
-    )
-
-    const { baseAmount, sgstAmount, cgstAmount } = gstSummary
+    
+    // GST is calculated as 18% on top of the discounted amount
+    const gstAmount = (amountAfterDiscount * 18) / 100
+    const finalAmount = amountAfterDiscount + gstAmount
 
     const styles = {
       receipt: {
@@ -361,15 +334,12 @@ export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
               <th style={styles.cell}>Pack</th>
               <th style={styles.cell}>Qty</th>
               <th style={styles.cell}>MRP</th>
-
-              <th style={styles.cell}>CGST Amt</th>
-              <th style={styles.cell}>SGST Amt</th>
+              <th style={styles.cell}>Amount</th>
               <th style={styles.cell}>Total</th>
             </tr>
           </thead>
           <tbody>
             {validCart.map((item, index) => {
-              const { sgst, cgst } = calculateItemGST(item)
               return (
                 <tr key={index}>
                   <td style={styles.cell}>{index + 1}</td>
@@ -381,14 +351,7 @@ export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
                   <td style={styles.cell}>{item.quantity}</td>
                   <td style={styles.cell}>₹{item.price.toFixed(2)}</td>
                   <td style={styles.cell}>
-                    ₹{cgst.toFixed(2)}
-                    <br />
-                    {item.cgst || 0}%
-                  </td>
-                  <td style={styles.cell}>
-                    ₹{sgst.toFixed(2)}
-                    <br />
-                    {item.sgst || 0}%
+                    ₹{(item.quantity * item.price).toFixed(2)}
                   </td>
                   <td style={styles.cell}>
                     ₹{(item.quantity * item.price).toFixed(2)}
@@ -398,44 +361,52 @@ export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
             })}
             {/* Subtotal row */}
             <tr>
-              <td style={styles.cell} colSpan={8} rowSpan={3}></td>
-              <td style={styles.cell} colSpan={2}>
+              <td style={styles.cell} colSpan={8} rowSpan={5}></td>
+              <td style={styles.cell} colSpan={1}>
                 Sub Total
               </td>
               <td style={styles.cell}>₹{totalAmount.toFixed(2)}</td>
             </tr>
-            {/* GST rows */}
-            <tr>
-              <td style={styles.cell} colSpan={2}>
-                CGST Total
-              </td>
-              <td style={styles.cell}>₹{cgstAmount.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td style={styles.cell} colSpan={2}>
-                SGST Total
-              </td>
-              <td style={styles.cell}>₹{sgstAmount.toFixed(2)}</td>
-            </tr>
             {/* Discount row if applicable */}
             {discountPercentage > 0 && (
               <tr>
-                <td style={styles.cell} colSpan={10}>
+                <td style={styles.cell} colSpan={1}>
                   Discount ({discountPercentage}%)
                 </td>
                 <td style={styles.cell}>-₹{discountAmount.toFixed(2)}</td>
               </tr>
             )}
+            {/* Total after discount */}
+            <tr>
+              <td style={styles.cell} colSpan={1}>
+                Amount after Discount
+              </td>
+              <td style={styles.cell}>₹{amountAfterDiscount.toFixed(2)}</td>
+            </tr>
+            {/* GST row */}
+            <tr>
+              <td style={styles.cell} colSpan={1}>
+                GST (18%)
+              </td>
+              <td style={styles.cell}>₹{gstAmount.toFixed(2)}</td>
+            </tr>
+            {/* Grand Total */}
+            <tr>
+              <td style={styles.cell} colSpan={1}>
+                Grand Total
+              </td>
+              <td style={styles.cell}>₹{finalAmount.toFixed(2)}</td>
+            </tr>
           </tbody>
         </table>
 
         <div style={styles.bottomSection}>
           <div style={styles.amountWords}>
             Amount In Words: INR{' '}
-            {numberToWords(Math.round(amountAfterDiscount))} Only.
+            {numberToWords(Math.round(finalAmount))} Only.
           </div>
           <div style={styles.taxSummary}>
-            Invoice Total: ₹{amountAfterDiscount.toFixed(2)}
+            Invoice Total: ₹{finalAmount.toFixed(2)}
           </div>
         </div>
 
@@ -446,9 +417,9 @@ export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
           <div style={styles.footerContent}>
             <div>
               <div>Outstanding Details</div>
-              <div>Previous Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Current Invoice: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Total Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
+              <div>Previous Outstanding: ₹{finalAmount.toFixed(2)}</div>
+              <div>Current Invoice: ₹{finalAmount.toFixed(2)}</div>
+              <div>Total Outstanding: ₹{finalAmount.toFixed(2)}</div>
             </div>
             <div>
               For Mudra Signs

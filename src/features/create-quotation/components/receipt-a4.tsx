@@ -48,37 +48,10 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
 
     const discountAmount = (totalAmount * discountPercentage) / 100
     const amountAfterDiscount = totalAmount - discountAmount
-
-    // Updated GST calculation logic
-    const calculateItemGST = (item: any) => {
-      const itemPrice = item.price
-      const itemQuantity = item.quantity
-      const baseAmount = itemPrice * itemQuantity
-
-      return {
-        sgst: (baseAmount * (item.sgst || 0)) / 100,
-        cgst: (baseAmount * (item.cgst || 0)) / 100,
-      }
-    }
-
-    // Calculate GST components from individual items
-    const gstSummary = validCart.reduce(
-      (summary, item) => {
-        const { sgst, cgst } = calculateItemGST(item)
-        const itemTotal = item.quantity * item.price
-        const itemBaseAmount =
-          itemTotal / (1 + ((item.sgst || 0) + (item.cgst || 0)) / 100)
-
-        return {
-          baseAmount: summary.baseAmount + itemBaseAmount,
-          sgstAmount: summary.sgstAmount + sgst,
-          cgstAmount: summary.cgstAmount + cgst,
-        }
-      },
-      { baseAmount: 0, sgstAmount: 0, cgstAmount: 0 }
-    )
-
-    const { baseAmount, sgstAmount, cgstAmount } = gstSummary
+    
+    // GST is calculated as 18% on top of the discounted amount
+    const gstAmount = (amountAfterDiscount * 18) / 100
+    const finalAmount = amountAfterDiscount + gstAmount
 
     const styles = {
       receipt: {
@@ -368,15 +341,12 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
               <th style={styles.cell}>Pack</th>
               <th style={styles.cell}>Qty</th>
               <th style={styles.cell}>MRP</th>
-
-              <th style={styles.cell}>CGST Amt</th>
-              <th style={styles.cell}>SGST Amt</th>
+              <th style={styles.cell}>GST Amt</th>
               <th style={styles.cell}>Total</th>
             </tr>
           </thead>
           <tbody>
             {validCart.map((item, index) => {
-              const { sgst, cgst } = calculateItemGST(item)
               return (
                 <tr key={index}>
                   <td style={styles.cell}>{index + 1}</td>
@@ -387,9 +357,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                   <td style={styles.cell}>{item.unit || '-'}</td>
                   <td style={styles.cell}>{item.quantity}</td>
                   <td style={styles.cell}>₹{item.price.toFixed(2)}</td>
-
-                  <td style={styles.cell}>₹{cgst.toFixed(2)}</td>
-                  <td style={styles.cell}>₹{sgst.toFixed(2)}</td>
+                  <td style={styles.cell}>₹0.00</td>
                   <td style={styles.cell}>
                     ₹{(item.quantity * item.price).toFixed(2)}
                   </td>
@@ -399,7 +367,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             {/* Empty rows for additional entries */}
             {[...Array(7)].map((_, i) => (
               <tr key={`empty-${i}`}>
-                {[...Array(11)].map((_, j) => (
+                {[...Array(10)].map((_, j) => (
                   <td key={`empty-${i}-${j}`} style={styles.cell}>
                     &nbsp;
                   </td>
@@ -412,43 +380,39 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         <table style={styles.taxTable}>
           <tbody>
             <tr>
-              <td style={styles.cell}>Taxable Value</td>
-              <td style={styles.cell}>CGST Amount</td>
-              <td style={styles.cell}>SGST Amount</td>
-              <td style={styles.cell}>Total Tax</td>
-              <td style={styles.cell}>Round Off</td>
-            </tr>
-            <tr>
-              <td style={styles.cell}>₹{baseAmount.toFixed(2)}</td>
-              <td style={styles.cell}>₹{cgstAmount.toFixed(2)}</td>
-              <td style={styles.cell}>₹{sgstAmount.toFixed(2)}</td>
-              <td style={styles.cell}>
-                ₹{(cgstAmount + sgstAmount).toFixed(2)}
-              </td>
-              <td style={styles.cell}>
-                {(
-                  Math.round(amountAfterDiscount) - amountAfterDiscount
-                ).toFixed(2)}
-              </td>
+              <td style={styles.cell}>Sub Total</td>
+              <td style={styles.cell}>₹{totalAmount.toFixed(2)}</td>
             </tr>
             {discountPercentage > 0 && (
               <tr>
-                <td style={styles.cell} colSpan={4}>
+                <td style={styles.cell}>
                   Discount ({discountPercentage}%)
                 </td>
                 <td style={styles.cell}>-₹{discountAmount.toFixed(2)}</td>
               </tr>
             )}
+            <tr>
+              <td style={styles.cell}>Total After Discount</td>
+              <td style={styles.cell}>₹{amountAfterDiscount.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style={styles.cell}>GST (18%)</td>
+              <td style={styles.cell}>₹{gstAmount.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style={styles.cell}>Grand Total</td>
+              <td style={styles.cell}>₹{finalAmount.toFixed(2)}</td>
+            </tr>
           </tbody>
         </table>
 
         <div style={styles.bottomSection}>
           <div style={styles.amountWords}>
             Amount In Words: INR{' '}
-            {numberToWords(Math.round(amountAfterDiscount))} Only.
+            {numberToWords(Math.round(finalAmount))} Only.
           </div>
           <div style={styles.taxSummary}>
-            Quotation Total: ₹{amountAfterDiscount.toFixed(2)}
+            Quotation Total: ₹{finalAmount.toFixed(2)}
           </div>
         </div>
 
@@ -459,9 +423,9 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
           <div style={styles.footerContent}>
             <div>
               <div>Outstanding Details</div>
-              <div>Previous Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Current Quotation: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Total Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
+              <div>Previous Outstanding: ₹{finalAmount.toFixed(2)}</div>
+              <div>Current Quotation: ₹{finalAmount.toFixed(2)}</div>
+              <div>Total Outstanding: ₹{finalAmount.toFixed(2)}</div>
             </div>
             <div>
               For Mudra Signs
