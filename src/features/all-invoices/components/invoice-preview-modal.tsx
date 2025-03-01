@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { ReceiptA4 } from '@/features/create-quotation/components/receipt-a4'
+import { InvoiceA4 } from './invoice-a4'
 import { useToast } from '@/hooks/use-toast'
 import { EditInvoiceModal } from './edit-invoice-modal'
 
@@ -114,14 +114,17 @@ export function InvoicePreviewModal({
           <div className="flex-1 overflow-y-auto p-6">
             <div className="flex justify-center">
               <div className="origin-top scale-[0.85] transform">
-                <ReceiptA4
+                <InvoiceA4
                   ref={printRef}
                   cart={invoiceDetails.cart || []}
                   total={invoiceDetails.total || 0}
                   customerDetails={invoiceDetails.customerDetails || {}}
                   discountPercentage={invoiceDetails.discountPercentage || 0}
-                  quotationDetails={invoiceDetails.quotationDetails || {}}
-                  isInvoice={true}
+                  invoiceDetails={{
+                    invoice_number: invoiceDetails.quotationDetails?.quotation_number || '',
+                    order_date: invoiceDetails.quotationDetails?.order_date || '',
+                    order_time: invoiceDetails.quotationDetails?.order_time || ''
+                  }}
                 />
               </div>
             </div>

@@ -9,10 +9,11 @@ interface InvoicePreviewProps {
     customerMobile: string
   }
   discountPercentage?: number
-  invoiceDetails?: {
-    invoiceNumber: string
+  quotationDetails?: {
+    quotationNumber: string
     date: string
     dueDate: string
+    isInvoice: boolean
   }
 }
 
@@ -26,7 +27,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         customerMobile: '',
       },
       discountPercentage = 0,
-      invoiceDetails,
+      quotationDetails,
     },
     ref
   ) => {
@@ -191,9 +192,11 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         {/* Header */}
         <div className='mb-8 flex items-start justify-between border-b pb-6'>
           <div>
-            <h1 className='text-3xl font-bold text-gray-800'>INVOICE</h1>
+            <h1 className='text-3xl font-bold text-gray-800'>
+              {quotationDetails?.isInvoice ? 'TAX INVOICE' : 'QUOTATION'}
+            </h1>
             <p className='mt-1 text-sm text-gray-600'>
-              #{invoiceDetails?.invoiceNumber || 'INV-00000'}
+              #{quotationDetails?.quotationNumber || 'INV-00000'}
             </p>
           </div>
           <div className='text-right'>
@@ -209,7 +212,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
           </div>
         </div>
 
-        {/* Invoice Details */}
+        {/* Quotation Details */}
         <div className='mb-8 flex justify-between'>
           <div>
             <h3 className='mb-2 font-medium text-gray-800'>Bill To:</h3>
@@ -225,13 +228,13 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
             <div className='mb-2'>
               <span className='font-medium text-gray-600'>Invoice Date:</span>
               <span className='ml-2 text-gray-700'>
-                {invoiceDetails?.date || new Date().toLocaleDateString('en-IN')}
+                {quotationDetails?.date || new Date().toLocaleDateString('en-IN')}
               </span>
             </div>
             <div>
               <span className='font-medium text-gray-600'>Due Date:</span>
               <span className='ml-2 text-gray-700'>
-                {invoiceDetails?.dueDate ||
+                {quotationDetails?.dueDate ||
                   new Date().toLocaleDateString('en-IN')}
               </span>
             </div>

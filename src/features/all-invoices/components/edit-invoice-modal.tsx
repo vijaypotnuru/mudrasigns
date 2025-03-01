@@ -223,16 +223,32 @@ export function EditInvoiceModal({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="orderDate">Date</Label>
+                <Label htmlFor="orderDate">Date (DD/MM/YYYY)</Label>
                 <Input
                   id="orderDate"
+                  placeholder="DD/MM/YYYY"
                   value={invoiceInfo.order_date}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Only allow digits and forward slashes
+                    if (!/^[0-9/]*$/.test(value)) {
+                      return;
+                    }
+                    
+                    // Format as DD/MM/YYYY while typing
+                    let formattedValue = value;
+                    if (value.length === 2 && !value.includes('/')) {
+                      formattedValue = value + '/';
+                    } else if (value.length === 5 && value.split('/').length === 2) {
+                      formattedValue = value + '/';
+                    }
+                    
                     setInvoiceInfo({
                       ...invoiceInfo,
-                      order_date: e.target.value,
-                    })
-                  }
+                      order_date: formattedValue,
+                    });
+                  }}
+                  maxLength={10}
                 />
               </div>
               <div className="space-y-2">

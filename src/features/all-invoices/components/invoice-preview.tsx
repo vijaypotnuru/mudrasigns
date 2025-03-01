@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { ReceiptA4 } from '@/features/create-quotation/components/receipt-a4'
+import { InvoiceA4 } from './invoice-a4'
 
 interface InvoicePreviewProps {
   cart?: any[]
@@ -31,14 +31,17 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
     ref
   ) => {
     return (
-      <ReceiptA4
+      <InvoiceA4
         ref={ref}
         cart={cart}
         total={total}
         customerDetails={customerDetails}
         discountPercentage={discountPercentage}
-        quotationDetails={quotationDetails}
-        isInvoice={true}
+        invoiceDetails={{
+          invoice_number: quotationDetails?.quotation_number || '',
+          order_date: quotationDetails?.order_date || '',
+          order_time: quotationDetails?.order_time || ''
+        }}
       />
     )
   }

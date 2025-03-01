@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { forwardRef } from 'react'
 
-interface ReceiptA4Props {
+interface InvoiceA4Props {
   cart?: any[]
   total?: number
   customerDetails?: {
@@ -9,15 +9,14 @@ interface ReceiptA4Props {
     customerMobile: string
   }
   discountPercentage?: number
-  quotationDetails?: {
-    quotation_number: string
+  invoiceDetails?: {
+    invoice_number: string
     order_date: string
     order_time: string
   }
-  isInvoice?: boolean
 }
 
-export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
+export const InvoiceA4 = forwardRef<HTMLDivElement, InvoiceA4Props>(
   (
     {
       cart = [],
@@ -27,8 +26,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         customerMobile: '',
       },
       discountPercentage = 0,
-      quotationDetails,
-      isInvoice = false,
+      invoiceDetails,
     },
     ref
   ) => {
@@ -136,7 +134,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         fontStyle: 'italic',
         marginBottom: '5px',
       },
-      quotationInfo: {
+      invoiceInfo: {
         width: '250px',
       },
       infoTable: {
@@ -183,12 +181,6 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
         display: 'flex',
         justifyContent: 'space-between',
         marginTop: '20px',
-      },
-      jurisdiction: {
-        textAlign: 'center' as const,
-        marginTop: '10px',
-        borderTop: '1px solid #000',
-        paddingTop: '10px',
       },
     }
 
@@ -278,7 +270,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
           <div style={styles.headerTop}>
             <div style={{ width: '200px' }}></div>
             <div style={styles.gstTitle}>
-              {isInvoice ? 'TAX INVOICE' : 'QUOTATION'}
+              TAX INVOICE
             </div>
             <div style={styles.originalCopy}>ORIGINAL FOR RECIPIENT</div>
           </div>
@@ -299,6 +291,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             Email: mudrasignage@gmail.com
             <br />
             GSTIN: 37BMYPS3816Q1ZD
+            <br />
           </div>
         </div>
 
@@ -324,22 +317,22 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                 <div>State Code: 37</div>
               </div>
             </div>
-            <div style={styles.quotationInfo}>
+            <div style={styles.invoiceInfo}>
               <table style={styles.infoTable}>
                 <tbody>
                   <tr>
-                    <td>Quotation No</td>
+                    <td>Invoice No</td>
                     <td>
                       :{' '}
-                      {quotationDetails?.quotation_number ||
-                        `QUO-${Date.now().toString().slice(-6)}`}
+                      {invoiceDetails?.invoice_number ||
+                        `INV-${Date.now().toString().slice(-6)}`}
                     </td>
                   </tr>
                   <tr>
                     <td>Date</td>
                     <td>
                       :{' '}
-                      {quotationDetails?.order_date ||
+                      {invoiceDetails?.order_date ||
                         new Date().toLocaleDateString('en-IN')}
                     </td>
                   </tr>
@@ -347,7 +340,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                     <td>Time</td>
                     <td>
                       :{' '}
-                      {quotationDetails?.order_time ||
+                      {invoiceDetails?.order_time ||
                         new Date().toLocaleTimeString('en-IN')}
                     </td>
                   </tr>
@@ -387,53 +380,47 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
                   <td style={styles.cell}>{item.unit || '-'}</td>
                   <td style={styles.cell}>{item.quantity}</td>
                   <td style={styles.cell}>₹{item.price.toFixed(2)}</td>
-
-                  <td style={styles.cell}>₹{cgst.toFixed(2)}</td>
-                  <td style={styles.cell}>₹{sgst.toFixed(2)}</td>
+                  <td style={styles.cell}>
+                    ₹{cgst.toFixed(2)}
+                    <br />
+                    {item.cgst || 0}%
+                  </td>
+                  <td style={styles.cell}>
+                    ₹{sgst.toFixed(2)}
+                    <br />
+                    {item.sgst || 0}%
+                  </td>
                   <td style={styles.cell}>
                     ₹{(item.quantity * item.price).toFixed(2)}
                   </td>
                 </tr>
               )
             })}
-            {/* Empty rows for additional entries */}
-            {[...Array(7)].map((_, i) => (
-              <tr key={`empty-${i}`}>
-                {[...Array(11)].map((_, j) => (
-                  <td key={`empty-${i}-${j}`} style={styles.cell}>
-                    &nbsp;
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <table style={styles.taxTable}>
-          <tbody>
+            {/* Subtotal row */}
             <tr>
-              <td style={styles.cell}>Taxable Value</td>
-              <td style={styles.cell}>CGST Amount</td>
-              <td style={styles.cell}>SGST Amount</td>
-              <td style={styles.cell}>Total Tax</td>
-              <td style={styles.cell}>Round Off</td>
+              <td style={styles.cell} colSpan={8} rowSpan={3}></td>
+              <td style={styles.cell} colSpan={2}>
+                Sub Total
+              </td>
+              <td style={styles.cell}>₹{totalAmount.toFixed(2)}</td>
             </tr>
+            {/* GST rows */}
             <tr>
-              <td style={styles.cell}>₹{baseAmount.toFixed(2)}</td>
+              <td style={styles.cell} colSpan={2}>
+                CGST Total
+              </td>
               <td style={styles.cell}>₹{cgstAmount.toFixed(2)}</td>
-              <td style={styles.cell}>₹{sgstAmount.toFixed(2)}</td>
-              <td style={styles.cell}>
-                ₹{(cgstAmount + sgstAmount).toFixed(2)}
-              </td>
-              <td style={styles.cell}>
-                {(
-                  Math.round(amountAfterDiscount) - amountAfterDiscount
-                ).toFixed(2)}
-              </td>
             </tr>
+            <tr>
+              <td style={styles.cell} colSpan={2}>
+                SGST Total
+              </td>
+              <td style={styles.cell}>₹{sgstAmount.toFixed(2)}</td>
+            </tr>
+            {/* Discount row if applicable */}
             {discountPercentage > 0 && (
               <tr>
-                <td style={styles.cell} colSpan={4}>
+                <td style={styles.cell} colSpan={10}>
                   Discount ({discountPercentage}%)
                 </td>
                 <td style={styles.cell}>-₹{discountAmount.toFixed(2)}</td>
@@ -448,7 +435,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             {numberToWords(Math.round(amountAfterDiscount))} Only.
           </div>
           <div style={styles.taxSummary}>
-            Quotation Total: ₹{amountAfterDiscount.toFixed(2)}
+            Invoice Total: ₹{amountAfterDiscount.toFixed(2)}
           </div>
         </div>
 
@@ -460,7 +447,7 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
             <div>
               <div>Outstanding Details</div>
               <div>Previous Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
-              <div>Current Quotation: ₹{amountAfterDiscount.toFixed(2)}</div>
+              <div>Current Invoice: ₹{amountAfterDiscount.toFixed(2)}</div>
               <div>Total Outstanding: ₹{amountAfterDiscount.toFixed(2)}</div>
             </div>
             <div>
@@ -478,4 +465,4 @@ export const ReceiptA4 = forwardRef<HTMLDivElement, ReceiptA4Props>(
   }
 )
 
-ReceiptA4.displayName = 'ReceiptA4'
+InvoiceA4.displayName = 'InvoiceA4'
