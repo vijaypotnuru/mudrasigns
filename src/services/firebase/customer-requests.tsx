@@ -44,17 +44,10 @@ export const getSignBoardRequestsByEmployee = async () => {
 
 export const getAllNewSignBoardLeads = async () => {
   const querySnapshot = await getDocs(collection(db, 'sign_board_requests'))
-  const requests = querySnapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-    .filter(
-      (request) =>
-        request.request === 'Interested' ||
-        request.request === 'Quotation' ||
-        request.request === 'New Signboard'
-    )
+  const requests = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
   return requests
 }
 
