@@ -187,18 +187,18 @@ export default function RequestDetailsPage({
                         onError={(e) => console.error('Error loading map:', e)}
                       ></iframe>
                     </div>
-
+                    {/* 
                     <div>
                       <a
                         href={`https://maps.google.com/?q=${requestDetails.location.latitude},${requestDetails.location.longitude}`}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-primary/90'
+                        className='inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-black hover:bg-primary-90'
                       >
                         <MapPin className='mr-2 h-4 w-4' />
                         View on Google Maps
                       </a>
-                    </div>
+                    </div> */}
 
                     <div className='text-xs text-muted-foreground'>
                       Captured on:{' '}
