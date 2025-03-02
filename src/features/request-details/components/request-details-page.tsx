@@ -10,6 +10,7 @@ import {
   Building,
   Phone,
   MapPin,
+  Globe,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -32,6 +33,11 @@ interface RequestDetails {
   isVerified: string
   note?: string
   userId: string
+  location?: {
+    latitude: number
+    longitude: number
+    timestamp: number
+  } | null
 }
 
 export default function RequestDetailsPage({
@@ -146,6 +152,63 @@ export default function RequestDetailsPage({
               </div>
 
               <Separator className='my-6' />
+
+              {requestDetails.location &&
+              requestDetails.location.latitude &&
+              requestDetails.location.longitude ? (
+                <div className='mb-6'>
+                  <h3 className='mb-4 font-semibold text-muted-foreground'>
+                    Upload Location
+                  </h3>
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex items-center'>
+                      <Globe className='mr-3 h-5 w-5 text-primary' />
+                      <div>
+                        <h3 className='font-semibold text-muted-foreground'>
+                          Coordinates
+                        </h3>
+                        <p>
+                          {requestDetails.location.latitude.toFixed(6)},{' '}
+                          {requestDetails.location.longitude.toFixed(6)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className='h-[200px] w-full overflow-hidden rounded-md border'>
+                      {/* Wrap in an error boundary or handle loading states */}
+                      <iframe
+                        title='Location Map'
+                        width='100%'
+                        height='100%'
+                        frameBorder='0'
+                        src={`https://maps.google.com/maps?q=${requestDetails.location.latitude},${requestDetails.location.longitude}&z=15&output=embed`}
+                        allowFullScreen
+                        onLoad={() => console.log('Map loaded successfully')}
+                        onError={(e) => console.error('Error loading map:', e)}
+                      ></iframe>
+                    </div>
+
+                    <div>
+                      <a
+                        href={`https://maps.google.com/?q=${requestDetails.location.latitude},${requestDetails.location.longitude}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-primary/90'
+                      >
+                        <MapPin className='mr-2 h-4 w-4' />
+                        View on Google Maps
+                      </a>
+                    </div>
+
+                    <div className='text-xs text-muted-foreground'>
+                      Captured on:{' '}
+                      {new Date(
+                        requestDetails.location.timestamp
+                      ).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <div>
                 <h3 className='mb-4 font-semibold text-muted-foreground'>

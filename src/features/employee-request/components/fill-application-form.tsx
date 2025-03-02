@@ -85,6 +85,8 @@ export default function FillApplicationForm() {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
+  const [locationData, setLocationData] = useState<{latitude: number; longitude: number; timestamp: number; address?: string} | null>(null)
+  const [locationError, setLocationError] = useState<string>('')
   const toast = useToast()
   const user = JSON.parse(localStorage.getItem('user'))
   const userId = user.userId
@@ -136,9 +138,78 @@ export default function FillApplicationForm() {
       ...values,
       files: files,
       userId: userId,
+      location: locationData,
     }
     console.log('payload in fill application form', payload)
     mutation.mutate(payload)
+  }
+
+  // Function to get current location
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser')
+      return
+    }
+    
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (position && position.coords) {
+            const locationObj = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              timestamp: position.timestamp
+            }
+            
+            // Get address from coordinates using Geocoding API
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyBiJeJBXqQ1jLlDVu7kMrh3qjMqnPYdInA`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.results && data.results.length > 0) {
+                  setLocationData({
+                    ...locationObj,
+                    address: data.results[0].formatted_address
+                  })
+                } else {
+                  setLocationData(locationObj)
+                }
+              })
+              .catch(error => {
+                console.error("Error getting address:", error);
+                setLocationData(locationObj)
+              });
+              
+            setLocationError('')
+          } else {
+            setLocationError('Invalid location data received')
+          }
+        },
+        (error) => {
+          let errorMessage = 'Unknown error occurred getting your location'
+          switch(error.code) {
+            case 1:
+              errorMessage = 'Location permission denied'
+              break
+            case 2:
+              errorMessage = 'Location unavailable'
+              break
+            case 3:
+              errorMessage = 'Location request timed out'
+              break
+          }
+          setLocationError(errorMessage)
+          console.error('Geolocation error:', error)
+        },
+        { 
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      )
+    } catch (error) {
+      console.error('Error getting location:', error)
+      setLocationError('Failed to get location')
+    }
   }
 
   return (
@@ -403,16 +474,43 @@ export default function FillApplicationForm() {
                         }
 
                         setFiles((prev) => [...prev, ...validFiles])
+                        
+                        // Get location when files are uploaded
+                        if (validFiles.length > 0) {
+                          getCurrentLocation()
+                        }
                       }}
                     />
                   </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
+              <FormItem>
+                {locationData && locationData.latitude && locationData.longitude ? (
+                  <div className="p-3 border rounded-md bg-muted/30">
+                    {locationData.address && (
+                      <div className="mb-2 text-sm">
+                        {locationData.address}
+                      </div>
+                    )}
+                    <div className="text-sm">
+                      Latitude: {locationData.latitude.toFixed(6)} | Longitude: {locationData.longitude.toFixed(6)}
+                    </div>
+                  </div>
+                ) : locationError ? (
+                  <div className="text-xs text-destructive">
+                    {locationError} - Location tracking is required
+                  </div>
+                ) : files.length > 0 ? (
+                  <div className="text-xs font-medium text-amber-500">
+                    Waiting for location data... Please allow location access when prompted.
+                  </div>
+                ) : null}
+              </FormItem>
               <Button
                 type='submit'
                 className='w-full'
-                disabled={mutation.isPending}
+                disabled={mutation.isPending || (!locationData && files.length > 0)}
               >
                 {mutation.isPending ? (
                   <>

@@ -12,6 +12,11 @@ export interface ApplicationData {
   files?: File[] | null
   userId: string
   note: string
+  location?: {
+    latitude: number
+    longitude: number
+    timestamp: number
+  } | null
 }
 
 export const submitApplication = async (
@@ -50,6 +55,7 @@ export const submitApplication = async (
     createdAt: unixTimestamp,
     userId: data.userId,
     note: data.note,
+    location: data.location || null,
   }
 
   const docRef = await addDoc(collection(db, 'sign_board_requests'), formData)
