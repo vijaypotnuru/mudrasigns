@@ -13,7 +13,7 @@ import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
 import { StatusUpdateDialog } from './status-update-dialog'
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<any>[] = [
   // {
   //   id: 'select',
   //   header: ({ table }) => (

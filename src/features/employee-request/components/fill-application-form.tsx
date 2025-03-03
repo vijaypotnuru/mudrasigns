@@ -42,7 +42,7 @@ const formSchema = z.object({
     message: 'Client name must be at least 2 characters.',
   }),
   phoneNumber: z.string().regex(/^\d{10}$/, {
-    message: 'Phone number must be 10 digits.',
+    message: 'Phone number must be exactly 10 digits.',
   }),
   companyName: z.string().min(2, {
     message: 'Company name must be at least 2 characters.',
@@ -76,7 +76,7 @@ const formSchema = z.object({
   // isVerified: z.enum(['Option 1', 'Option 2', 'Option 3'], {
   //   required_error: 'Please select an option.',
   // }),
-  note: z.string().optional(),
+  note: z.string().min(2, { message: 'Note must be at least 2 characters.' }),
 })
 
 export default function FillApplicationForm() {
@@ -85,7 +85,12 @@ export default function FillApplicationForm() {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorDialog, setShowErrorDialog] = useState(false)
-  const [locationData, setLocationData] = useState<{latitude: number; longitude: number; timestamp: number; address?: string} | null>(null)
+  const [locationData, setLocationData] = useState<{
+    latitude: number
+    longitude: number
+    timestamp: number
+    address?: string
+  } | null>(null)
   const [locationError, setLocationError] = useState<string>('')
   const toast = useToast()
   const user = JSON.parse(localStorage.getItem('user'))
@@ -150,7 +155,7 @@ export default function FillApplicationForm() {
       setLocationError('Geolocation is not supported by your browser')
       return
     }
-    
+
     try {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -158,27 +163,29 @@ export default function FillApplicationForm() {
             const locationObj = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              timestamp: position.timestamp
+              timestamp: position.timestamp,
             }
-            
+
             // Get address from coordinates using Geocoding API
-            fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyBiJeJBXqQ1jLlDVu7kMrh3qjMqnPYdInA`)
-              .then(response => response.json())
-              .then(data => {
+            fetch(
+              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyBiJeJBXqQ1jLlDVu7kMrh3qjMqnPYdInA`
+            )
+              .then((response) => response.json())
+              .then((data) => {
                 if (data.results && data.results.length > 0) {
                   setLocationData({
                     ...locationObj,
-                    address: data.results[0].formatted_address
+                    address: data.results[0].formatted_address,
                   })
                 } else {
                   setLocationData(locationObj)
                 }
               })
-              .catch(error => {
-                console.error("Error getting address:", error);
+              .catch((error) => {
+                console.error('Error getting address:', error)
                 setLocationData(locationObj)
-              });
-              
+              })
+
             setLocationError('')
           } else {
             setLocationError('Invalid location data received')
@@ -186,7 +193,7 @@ export default function FillApplicationForm() {
         },
         (error) => {
           let errorMessage = 'Unknown error occurred getting your location'
-          switch(error.code) {
+          switch (error.code) {
             case 1:
               errorMessage = 'Location permission denied'
               break
@@ -200,10 +207,10 @@ export default function FillApplicationForm() {
           setLocationError(errorMessage)
           console.error('Geolocation error:', error)
         },
-        { 
+        {
           enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 0
+          maximumAge: 0,
         }
       )
     } catch (error) {
@@ -268,6 +275,13 @@ export default function FillApplicationForm() {
                         placeholder='0000000000'
                         {...field}
                         className='w-full'
+                        type="tel"
+                        maxLength={10}
+                        onInput={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          target.value = target.value.replace(/\D/g, '');
+                          field.onChange(target.value);
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -391,9 +405,6 @@ export default function FillApplicationForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Optional notes about the current status
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -474,7 +485,7 @@ export default function FillApplicationForm() {
                         }
 
                         setFiles((prev) => [...prev, ...validFiles])
-                        
+
                         // Get location when files are uploaded
                         if (validFiles.length > 0) {
                           getCurrentLocation()
@@ -486,31 +497,35 @@ export default function FillApplicationForm() {
                 <FormMessage />
               </FormItem>
               <FormItem>
-                {locationData && locationData.latitude && locationData.longitude ? (
-                  <div className="p-3 border rounded-md bg-muted/30">
+                {locationData &&
+                locationData.latitude &&
+                locationData.longitude ? (
+                  <div className='rounded-md border bg-muted/30 p-3'>
                     {locationData.address && (
-                      <div className="mb-2 text-sm">
-                        {locationData.address}
-                      </div>
+                      <div className='mb-2 text-sm'>{locationData.address}</div>
                     )}
-                    <div className="text-sm">
-                      Latitude: {locationData.latitude.toFixed(6)} | Longitude: {locationData.longitude.toFixed(6)}
+                    <div className='text-sm'>
+                      Latitude: {locationData.latitude.toFixed(6)} | Longitude:{' '}
+                      {locationData.longitude.toFixed(6)}
                     </div>
                   </div>
                 ) : locationError ? (
-                  <div className="text-xs text-destructive">
+                  <div className='text-xs text-destructive'>
                     {locationError} - Location tracking is required
                   </div>
                 ) : files.length > 0 ? (
-                  <div className="text-xs font-medium text-amber-500">
-                    Waiting for location data... Please allow location access when prompted.
+                  <div className='text-xs font-medium text-amber-500'>
+                    Waiting for location data... Please allow location access
+                    when prompted.
                   </div>
                 ) : null}
               </FormItem>
               <Button
                 type='submit'
                 className='w-full'
-                disabled={mutation.isPending || (!locationData && files.length > 0)}
+                disabled={
+                  mutation.isPending || (!locationData && files.length > 0)
+                }
               >
                 {mutation.isPending ? (
                   <>
