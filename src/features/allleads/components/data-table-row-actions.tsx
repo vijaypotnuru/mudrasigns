@@ -30,7 +30,7 @@ export function DataTableRowActions<TData>({
   row,
   id,
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  // const task = taskSchema.parse(row.original)
 
   // const { setOpen, setCurrentRow } = useTasks()
   const navigate = useNavigate()
